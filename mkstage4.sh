@@ -7,6 +7,11 @@ then
   exit 1
 fi
 
+#set flag variables to null
+EXCLUDE_BOOT=0
+EXCLUDE_CONNMAN=0
+QUIET=0
+
 # reads options:
 while getopts ':t:sqc' flag; do
   case "${flag}" in
@@ -74,16 +79,16 @@ shift;OPTIONS="$@"
 
 # Excludes:
 EXCLUDES="\
---exclude=${TARGET}proc/* \
---exclude=${TARGET}sys/* \
---exclude=${TARGET}tmp/* \
---exclude=${TARGET}mnt/*/* \
---exclude=${TARGET}var/lock/* \
---exclude=${TARGET}var/log/* \
---exclude=${TARGET}var/run/* \
---exclude=${TARGET}.bash_history \
---exclude=${TARGET}lost+found \
---exclude=${TARGET}usr/portage/*"
+--exclude=proc/* \
+--exclude=sys/* \
+--exclude=tmp/* \
+--exclude=mnt/*/* \
+--exclude=var/lock/* \
+--exclude=var/log/* \
+--exclude=var/run/* \
+--exclude=.bash_history \
+--exclude=lost+found \
+--exclude=usr/portage/*"
 
 if [ "$TARGET" == "/" ]
 then
@@ -92,12 +97,12 @@ fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=${TARGET}var/lib/connman/*"
+  EXCLUDES+=" --exclude=$var/lib/connman/*"
 fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=${TARGET}boot/*"
+  EXCLUDES+=" --exclude=$boot/*"
 fi
 
 # Generic tar options:
@@ -113,10 +118,12 @@ then
   echo "include all the mount points, but exclude mounted data."
   echo ""
   echo "WARNING: since all data is saved by default the user should exclude all"
-  echo "security- or privacy-related files and directories manually per cmdline."
+  echo "security- or privacy-related files and directories, which are not"
+  echo "already excluded by mkstage4 options (such as -c), manually per cmdline."
   echo "example: \$ `basename $0` -s /my-backup --exclude=/etc/ssh/ssh_host*"
   echo ""
-  echo -e "COMMAND LINE PREVIEW:\n\$ tar $TAR_OPTIONS $STAGE4_FILENAME $TARGET $EXCLUDES $OPTIONS"
+  echo -e "COMMAND LINE PREVIEW:\n\$"
+  echo "cd $TARGET && tar $TAR_OPTIONS $STAGE4_FILENAME * $EXCLUDES $OPTIONS"
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "
   read AGREE
@@ -125,7 +132,7 @@ fi
 # start stage4 creation:
 if [ "$AGREE" == "yes" ]
 then
-  tar $TAR_OPTIONS $STAGE4_FILENAME $TARGET $EXCLUDES $OPTIONS
+  cd $TARGET && tar $TAR_OPTIONS $STAGE4_FILENAME * $EXCLUDES $OPTIONS
 fi
 
 exit 0
