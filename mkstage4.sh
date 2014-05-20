@@ -97,7 +97,7 @@ fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=$var/lib/connman/*"
+  EXCLUDES+=" --exclude=var/lib/connman/*"
 fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
