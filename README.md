@@ -5,9 +5,9 @@ The script is a new edition of an earlier [mkstage4 script](https://github.com/g
  
 More information on mkstage4 can be found on its own Chymeric Tutorials article: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
 
-##Usage
+##Installation
 
-Preparing to run mkstage4 from its own directory:
+The script can be run directly from its containing folder (and thus, is installed simply by downloading or cloning it from here - and adding run permissions):
 
 ```bash
 git clone https://github.com/TheChymera/mkstage4.git /your/mkstage4/directory
@@ -15,16 +15,27 @@ cd /your/mkstage4/directory
 chmod +x mkstage4.sh
 ```
 
+For [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives), mkstage4 is also available for [Portage](http://en.wikipedia.org/wiki/Portage_(software)) via the *[chymerc overlay](https://github.com/TheChymera/chymeric)* (which can be enabled with just two commands, as seen in [the README](https://github.com/TheChymera/chymeric)).
+After you have enabled the overlay, just run the following command:
+
+```
+emerge app-backup/mkstage4
+```
+
+##Usage
+
+*If you are running the script from the containing foler (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
+
 Archive your current system (mounted at /):
 
 ```bash
-./mkstage4.sh -s archive_name
+mkstage4 -s archive_name
 ```
 
 Archive system located at a custom mount point:
 
 ```bash
-./mkstage4.sh -t /custom/mount/point archive_name
+mkstage4 -t /custom/mount/point archive_name
 ```
 
 Other options:
@@ -48,6 +59,6 @@ tar xvjpf archive_name.tar.bz2
 
 Please note that these are very basic dependencies and should already be included in any Linux system.
 
-##Meta
+---
 Released under the GPLv3 license.
 Project led by Horea Christian (address all correspondence to: h.chr@mail.ru).
