@@ -5,15 +5,32 @@ The script is a new edition of an earlier [mkstage4 script](https://github.com/g
  
 More information on mkstage4 can be found on its own Chymeric Tutorials article: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
 
-##Usage
+##Installation
 
-Preparing to run mkstage4 from its own directory:
+####On [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives):
+
+Mkstage4 is available in the [Portage](http://en.wikipedia.org/wiki/Portage_(software)) *[chymerc overlay](https://github.com/TheChymera/chymeric)* as **[app-backup/mkstage4](https://github.com/TheChymera/chymeric/tree/master/app-backup/mkstage4)**.
+Just run the following command:
+
+```
+emerge app-backup/mkstage4
+```
+
+*If you are not yet using this overlay, it can be enabled with just two commands, as seen in [the README](https://github.com/TheChymera/chymeric).*
+
+####On all other Operating Systems:
+
+For all other Linux distributions or operating systems, the script can also be run directly from the containing folder:
 
 ```bash
 git clone https://github.com/TheChymera/mkstage4.git /your/mkstage4/directory
 cd /your/mkstage4/directory
 chmod +x mkstage4.sh
 ```
+
+*Please bear in mind that this will not pull in RawTherapee, make sure you have already installed it.*
+
+##Usage
 
 Archive your current system (mounted at /):
 
@@ -29,9 +46,9 @@ Archive system located at a custom mount point:
 
 Other options:
 
-* ```-q```: (quiet) runs without prompting for confirmation (careful!).
-* ```-b```: (no-boot) excludes the ```/boot``` (or ```/cutom/mount/point/boot```) directory.
-* ```-c```: (no-connman) excludes connman saved networks directory.
+* `-q`: (quiet) runs without prompting for confirmation (careful!).
+* `-b`: (no-boot) excludes the `/boot` (or `/cutom/mount/point/boot`) directory.
+* `-c`: (no-connman) excludes connman saved networks directory.
 
 ##Extract Tarball
 
