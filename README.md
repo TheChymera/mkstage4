@@ -52,7 +52,7 @@ Tarballs created with mkstage4 can be extracted with:
 tar xvjpf archive_name.tar.bz2
 ```
 
-##Dependencies:
+##Dependencies
 
 * **[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** - in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) as **app-shells/bash**
 * **[tar](https://en.wikipedia.org/wiki/Tar_(computing))** - in Portage as **app-arch/tar**
