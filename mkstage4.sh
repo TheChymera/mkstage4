@@ -66,8 +66,7 @@ then
 fi
 
 # determines if filename was given with relative or absolute path
-if [ "`echo $ARCHIVE | grep -c '\/'`" -gt "0" ] && \
-[ "`echo $ARCHIVE | grep -c '^\/'`" -gt "0" ]
+if [ "`echo $ARCHIVE | grep -c '^\/'`" -gt "0" ]
 then
   STAGE4_FILENAME="${ARCHIVE}.tar.bz2"
 else
