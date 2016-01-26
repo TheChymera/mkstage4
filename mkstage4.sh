@@ -92,7 +92,7 @@ EXCLUDES="\
 
 if [ "$TARGET" == "/" ]
 then
-  EXCLUDES+=" --exclude=$STAGE4_FILENAME"
+  EXCLUDES+=" --exclude=${STAGE4_FILENAME#/}"
 fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
