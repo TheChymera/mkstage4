@@ -79,16 +79,19 @@ shift;OPTIONS="$@"
 
 # Excludes:
 EXCLUDES="\
+--exclude=.bash_history \
+--exclude=dev/* \
+--exclude=lost+found \
+--exclude=media/* \
+--exclude=mnt/*/* \
 --exclude=proc/* \
+--exclude=run/* \
 --exclude=sys/* \
 --exclude=tmp/* \
---exclude=mnt/*/* \
+--exclude=usr/portage/* \
 --exclude=var/lock/* \
 --exclude=var/log/* \
---exclude=var/run/* \
---exclude=.bash_history \
---exclude=lost+found \
---exclude=usr/portage/*"
+--exclude=var/run/*"
 
 if [ "$TARGET" == "/" ]
 then
