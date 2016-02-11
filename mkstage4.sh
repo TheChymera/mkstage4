@@ -13,7 +13,7 @@ EXCLUDE_CONNMAN=0
 QUIET=0
 
 # reads options:
-while getopts ':t:sqc' flag; do
+while getopts ':t:sqcb' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
@@ -104,7 +104,7 @@ fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=$boot/*"
+  EXCLUDES+=" --exclude=boot/*"
 fi
 
 # Generic tar options:
