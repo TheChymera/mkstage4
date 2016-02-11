@@ -11,9 +11,17 @@ fi
 EXCLUDE_BOOT=0
 EXCLUDE_CONNMAN=0
 QUIET=0
+USAGE="usage:\n\
+  `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]\n\
+  -q: activates quiet mode (no confirmation).\n\
+  -c: excludes connman network lists.\n\
+  -b: excludes boot directory.\n\
+  -s: makes tarball of current system.\n\
+  -t: makes tarball of system located at the <target-mountpoint>.\n\
+  -h: displays help message."
 
 # reads options:
-while getopts ':t:sqcb' flag; do
+while getopts ':t:sqcbh' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
@@ -30,6 +38,10 @@ while getopts ':t:sqcb' flag; do
     b)
       EXCLUDE_BOOT=1
       ;;
+    h)
+      echo -e "$USAGE"
+      exit 0
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
@@ -44,13 +56,7 @@ done
 if [ "$TARGET" == "" ]
 then
   echo "`basename $0`: no target specified."
-  echo "syntax:"
-  echo "\$ `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]"
-  echo "-q: activates quiet mode (no confirmation)."
-  echo "-c: excludes connman network lists."
-  echo "-b: excludes boot directory."
-  echo "-s: makes tarball of current system."
-  echo "-t: makes tarball of system located at the <target-mountpoint>."
+  echo -e "$USAGE"
   exit 1
 fi
 
@@ -62,13 +68,7 @@ ARCHIVE=$1
 if [ "$ARCHIVE" == "" ]
 then
   echo "`basename $0`: no archive file name specified."
-  echo "syntax:"
-  echo "\$ `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]"
-  echo "-q: activates quiet mode (no confirmation)."
-  echo "-c: excludes connman network lists."
-  echo "-b: excludes boot directory."
-  echo "-s: makes tarball of current system."
-  echo "-t: makes tarball of system located at the <target-mountpoint>."
+  echo -e "$USAGE"
   exit 1
 fi
 
