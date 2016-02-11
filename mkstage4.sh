@@ -41,6 +41,19 @@ while getopts ':t:sqcb' flag; do
   esac
 done
 
+if [ "$TARGET" == "" ]
+then
+  echo "`basename $0`: no target specified."
+  echo "syntax:"
+  echo "\$ `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]"
+  echo "-q: activates quiet mode (no confirmation)."
+  echo "-c: excludes connman network lists."
+  echo "-b: excludes boot directory."
+  echo "-s: makes tarball of current system."
+  echo "-t: makes tarball of system located at the <target-mountpoint>."
+  exit 1
+fi
+
 # shifts pointer to read mandatory output file specification
 shift $(($OPTIND - 1))
 ARCHIVE=$1
