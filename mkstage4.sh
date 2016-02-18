@@ -10,18 +10,20 @@ fi
 #set flag variables to null
 EXCLUDE_BOOT=0
 EXCLUDE_CONNMAN=0
+EXCLUDE_LOST=1
 QUIET=0
 USAGE="usage:\n\
   `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]\n\
   -q: activates quiet mode (no confirmation).\n\
   -c: excludes connman network lists.\n\
   -b: excludes boot directory.\n\
+  -l: includes lost+found directory.\n\
   -s: makes tarball of current system.\n\
   -t: makes tarball of system located at the <target-mountpoint>.\n\
   -h: displays help message."
 
 # reads options:
-while getopts ':t:sqcbh' flag; do
+while getopts ':t:sqcblh' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
@@ -37,6 +39,9 @@ while getopts ':t:sqcbh' flag; do
       ;;
     b)
       EXCLUDE_BOOT=1
+      ;;
+    l)
+      EXCLUDE_LOST=0
       ;;
     h)
       echo -e "$USAGE"
@@ -93,7 +98,6 @@ shift;OPTIONS="$@"
 EXCLUDES="\
 --exclude=.bash_history \
 --exclude=dev/* \
---exclude=lost+found/* \
 --exclude=media/* \
 --exclude=mnt/*/* \
 --exclude=proc/* \
@@ -118,6 +122,11 @@ fi
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
   EXCLUDES+=" --exclude=boot/*"
+fi
+
+if [ ${EXCLUDE_LOST} -eq 1 ]
+then
+  EXCLUDES+=" --exclude=lost+found"
 fi
 
 # Generic tar options:
