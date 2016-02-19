@@ -10,14 +10,14 @@ fi
 #set flag variables to null
 EXCLUDE_BOOT=0
 EXCLUDE_CONNMAN=0
-EXCLUDE_LOST=1
+EXCLUDE_LOST=0
 QUIET=0
 USAGE="usage:\n\
   `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]\n\
   -q: activates quiet mode (no confirmation).\n\
   -c: excludes connman network lists.\n\
   -b: excludes boot directory.\n\
-  -l: includes lost+found directory.\n\
+  -l: excludes lost+found directory.\n\
   -s: makes tarball of current system.\n\
   -t: makes tarball of system located at the <target-mountpoint>.\n\
   -h: displays help message."
@@ -41,7 +41,7 @@ while getopts ':t:sqcblh' flag; do
       EXCLUDE_BOOT=1
       ;;
     l)
-      EXCLUDE_LOST=0
+      EXCLUDE_LOST=1
       ;;
     h)
       echo -e "$USAGE"
