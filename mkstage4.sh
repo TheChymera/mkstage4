@@ -10,10 +10,20 @@ fi
 #set flag variables to null
 EXCLUDE_BOOT=0
 EXCLUDE_CONNMAN=0
+EXCLUDE_LOST=0
 QUIET=0
+USAGE="usage:\n\
+  `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]\n\
+  -q: activates quiet mode (no confirmation).\n\
+  -c: excludes connman network lists.\n\
+  -b: excludes boot directory.\n\
+  -l: excludes lost+found directory.\n\
+  -s: makes tarball of current system.\n\
+  -t: makes tarball of system located at the <target-mountpoint>.\n\
+  -h: displays help message."
 
 # reads options:
-while getopts ':t:sqc' flag; do
+while getopts ':t:sqcblh' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
@@ -30,6 +40,13 @@ while getopts ':t:sqc' flag; do
     b)
       EXCLUDE_BOOT=1
       ;;
+    l)
+      EXCLUDE_LOST=1
+      ;;
+    h)
+      echo -e "$USAGE"
+      exit 0
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
@@ -41,6 +58,13 @@ while getopts ':t:sqc' flag; do
   esac
 done
 
+if [ "$TARGET" == "" ]
+then
+  echo "`basename $0`: no target specified."
+  echo -e "$USAGE"
+  exit 1
+fi
+
 # shifts pointer to read mandatory output file specification
 shift $(($OPTIND - 1))
 ARCHIVE=$1
@@ -49,13 +73,7 @@ ARCHIVE=$1
 if [ "$ARCHIVE" == "" ]
 then
   echo "`basename $0`: no archive file name specified."
-  echo "syntax:"
-  echo "\$ `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]"
-  echo "-q: activates quiet mode (no confirmation)."
-  echo "-c: excludes connman network lists."
-  echo "-b: excludes boot directory."
-  echo "-s: makes tarball of current system."
-  echo "-t: makes tarball of system located at the <target-mountpoint>."
+  echo -e "$USAGE"
   exit 1
 fi
 
@@ -80,7 +98,6 @@ shift;OPTIONS="$@"
 EXCLUDES="\
 --exclude=.bash_history \
 --exclude=dev/* \
---exclude=lost+found \
 --exclude=media/* \
 --exclude=mnt/*/* \
 --exclude=proc/* \
@@ -104,7 +121,12 @@ fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=$boot/*"
+  EXCLUDES+=" --exclude=boot/*"
+fi
+
+if [ ${EXCLUDE_LOST} -eq 1 ]
+then
+  EXCLUDES+=" --exclude=lost+found"
 fi
 
 # Generic tar options:
@@ -117,15 +139,12 @@ then
   echo "located under the following directory?"
   echo "$TARGET"
   echo ""
-  echo "!!! The option --exclude=/mnt/*/* is not yet tested! It should"
-  echo "include all the mount points, but exclude mounted data."
-  echo ""
   echo "WARNING: since all data is saved by default the user should exclude all"
   echo "security- or privacy-related files and directories, which are not"
   echo "already excluded by mkstage4 options (such as -c), manually per cmdline."
   echo "example: \$ `basename $0` -s /my-backup --exclude=/etc/ssh/ssh_host*"
   echo ""
-  echo -e "COMMAND LINE PREVIEW:"
+  echo "COMMAND LINE PREVIEW:"
   echo "cd $TARGET && tar $TAR_OPTIONS $STAGE4_FILENAME * $EXCLUDES $OPTIONS"
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "

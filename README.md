@@ -24,7 +24,7 @@ emerge app-backup/mkstage4
 
 ##Usage
 
-*If you are running the script from the containing foler (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
+*If you are running the script from the containing folder (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
 
 Archive your current system (mounted at /):
 
@@ -40,9 +40,10 @@ mkstage4 -t /custom/mount/point archive_name
 
 Other options:
 
-* `-q`: (quiet) runs without prompting for confirmation (careful!).
-* `-b`: (no-boot) excludes the `/boot` (or `/cutom/mount/point/boot`) directory.
-* `-c`: (no-connman) excludes connman saved networks directory.
+* `-q`: runs without prompting for confirmation (careful!).
+* `-b`: excludes the `/boot` (or `/cutom/mount/point/boot`) directory.
+* `-c`: excludes connman saved networks directory.
+* `-l`: excludes the `/lost+found` directory.
 
 ##Extract Tarball
 
