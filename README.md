@@ -38,12 +38,18 @@ Archive system located at a custom mount point:
 mkstage4 -t /custom/mount/point archive_name
 ```
 
-Other options:
+Command line arguments:
 
-* `-q`: runs without prompting for confirmation (careful!).
-* `-b`: excludes the `/boot` (or `/cutom/mount/point/boot`) directory.
-* `-c`: excludes connman saved networks directory.
-* `-l`: excludes the `/lost+found` directory.
+```
+mkstage4 [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]
+  -q: activates quiet mode (no confirmation).
+  -c: excludes connman network lists.
+  -b: excludes boot directory.
+  -l: excludes lost+found directory.
+  -s: makes tarball of current system.
+  -t: makes tarball of system located at the <target-mountpoint>.
+  -h: displays help message.
+```
 
 ##Extract Tarball
 
