@@ -96,7 +96,7 @@ shift;OPTIONS="$@"
 
 # Excludes:
 EXCLUDES="\
---exclude=.bash_history \
+--exclude=home/*/.bash_history \
 --exclude=dev/* \
 --exclude=media/* \
 --exclude=mnt/*/* \
