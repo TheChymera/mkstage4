@@ -96,18 +96,18 @@ shift;OPTIONS="$@"
 
 # Excludes:
 EXCLUDES="\
---exclude=home/*/.bash_history \
---exclude=dev/* \
---exclude=media/* \
---exclude=mnt/*/* \
---exclude=proc/* \
---exclude=run/* \
---exclude=sys/* \
---exclude=tmp/* \
---exclude=usr/portage/* \
---exclude=var/lock/* \
---exclude=var/log/* \
---exclude=var/run/*"
+--exclude=${TARGET}/home/*/.bash_history \
+--exclude=${TARGET}/dev/* \
+--exclude=${TARGET}/media/* \
+--exclude=${TARGET}/mnt/*/* \
+--exclude=${TARGET}/proc/* \
+--exclude=${TARGET}/run/* \
+--exclude=${TARGET}/sys/* \
+--exclude=${TARGET}/tmp/* \
+--exclude=${TARGET}/usr/portage/* \
+--exclude=${TARGET}/var/lock/* \
+--exclude=${TARGET}/var/log/* \
+--exclude=${TARGET}/var/run/*"
 
 if [ "$TARGET" == "/" ]
 then
@@ -116,12 +116,12 @@ fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=var/lib/connman/*"
+  EXCLUDES+=" --exclude=${TARGET}/var/lib/connman/*"
 fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=boot/*"
+  EXCLUDES+=" --exclude=${TARGET}/boot/*"
 fi
 
 if [ ${EXCLUDE_LOST} -eq 1 ]
