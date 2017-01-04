@@ -154,7 +154,7 @@ fi
 # start stage4 creation:
 if [ "$AGREE" == "yes" ]
 then
-  cd $TARGET && tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME *
+  tar $TAR_OPTIONS -f $STAGE4_FILENAME * $EXCLUDES $OPTIONS
 fi
 
 exit 0
