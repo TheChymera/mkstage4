@@ -130,7 +130,7 @@ then
 fi
 
 # Generic tar options:
-TAR_OPTIONS="-cjpP --ignore-failed-read -f"
+TAR_OPTIONS="-cjpP --ignore-failed-read"
 
 # if not in quiet mode, this message will be displayed:
 if [ "$AGREE" != "yes" ]
@@ -154,7 +154,7 @@ fi
 # start stage4 creation:
 if [ "$AGREE" == "yes" ]
 then
-  cd $TARGET && tar $TAR_OPTIONS $EXCLUDES $OPTIONS $STAGE4_FILENAME * 
+  cd $TARGET && tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME * 
 fi
 
 exit 0
