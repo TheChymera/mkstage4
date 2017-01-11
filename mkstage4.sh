@@ -145,7 +145,7 @@ then
   echo "example: \$ `basename $0` -s /my-backup --exclude=/etc/ssh/ssh_host*"
   echo ""
   echo "COMMAND LINE PREVIEW:"
-  echo "cd $TARGET && tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME *"
+  echo "cd $TARGET && tar $TAR_OPTIONS -f $STAGE4_FILENAME * $EXCLUDES $OPTIONS"
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "
   read AGREE
@@ -154,7 +154,7 @@ fi
 # start stage4 creation:
 if [ "$AGREE" == "yes" ]
 then
-  cd $TARGET && tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME *
+  cd $TARGET && tar $TAR_OPTIONS -f $STAGE4_FILENAME * $EXCLUDES $OPTIONS
 fi
 
 exit 0
