@@ -1,11 +1,11 @@
-#mkstage4
+# mkstage4
 
 This is a bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
 The script is a new edition of an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which is itself a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintaied as of 2009). 
  
 More information on mkstage4 can be found on its own Chymeric Tutorials article: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
 
-##Installation
+## Installation
 
 The script can be run directly from its containing folder (and thus, is installed simply by downloading or cloning it from here - and adding run permissions):
 
@@ -22,7 +22,7 @@ After you have enabled the overlay, just run the following command:
 emerge app-backup/mkstage4
 ```
 
-##Usage
+## Usage
 
 *If you are running the script from the containing folder (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
 
@@ -51,7 +51,7 @@ mkstage4 [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-ta
   -h: displays help message.
 ```
 
-##Extract Tarball
+## Extract Tarball
 
 Tarballs created with mkstage4 can be extracted with:
 
@@ -59,7 +59,7 @@ Tarballs created with mkstage4 can be extracted with:
 tar xvjpf archive_name.tar.bz2
 ```
 
-##Dependencies
+## Dependencies
 
 * **[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** - in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) as **app-shells/bash**
 * **[tar](https://en.wikipedia.org/wiki/Tar_(computing))** - in Portage as **app-arch/tar**
