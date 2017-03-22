@@ -65,6 +65,12 @@ then
   exit 1
 fi
 
+# make sure TARGET path ends with slash
+if [ "`echo $TARGET | grep -c '\/$'`" -le "0" ]
+then
+  TARGET="${TARGET}/"
+fi
+
 # shifts pointer to read mandatory output file specification
 shift $(($OPTIND - 1))
 ARCHIVE=$1
@@ -96,18 +102,18 @@ shift;OPTIONS="$@"
 
 # Excludes:
 EXCLUDES="\
---exclude=${TARGET}/home/*/.bash_history \
---exclude=${TARGET}/dev/* \
---exclude=${TARGET}/media/* \
---exclude=${TARGET}/mnt/*/* \
---exclude=${TARGET}/proc/* \
---exclude=${TARGET}/run/* \
---exclude=${TARGET}/sys/* \
---exclude=${TARGET}/tmp/* \
---exclude=${TARGET}/usr/portage/* \
---exclude=${TARGET}/var/lock/* \
---exclude=${TARGET}/var/log/* \
---exclude=${TARGET}/var/run/*"
+--exclude=${TARGET}home/*/.bash_history \
+--exclude=${TARGET}dev/* \
+--exclude=${TARGET}media/* \
+--exclude=${TARGET}mnt/*/* \
+--exclude=${TARGET}proc/* \
+--exclude=${TARGET}run/* \
+--exclude=${TARGET}sys/* \
+--exclude=${TARGET}tmp/* \
+--exclude=${TARGET}usr/portage/* \
+--exclude=${TARGET}var/lock/* \
+--exclude=${TARGET}var/log/* \
+--exclude=${TARGET}var/run/*"
 
 if [ "$TARGET" == "/" ]
 then
@@ -116,12 +122,12 @@ fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=${TARGET}/var/lib/connman/*"
+  EXCLUDES+=" --exclude=${TARGET}var/lib/connman/*"
 fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=${TARGET}/boot/*"
+  EXCLUDES+=" --exclude=${TARGET}boot/*"
 fi
 
 if [ ${EXCLUDE_LOST} -eq 1 ]
@@ -145,7 +151,7 @@ then
   echo "example: \$ `basename $0` -s /my-backup --exclude=/etc/ssh/ssh_host*"
   echo ""
   echo "COMMAND LINE PREVIEW:"
-  echo "tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME *"
+  echo "tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME ${TARGET}*"
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "
   read AGREE
@@ -154,7 +160,7 @@ fi
 # start stage4 creation:
 if [ "$AGREE" == "yes" ]
 then
-  tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME *
+  tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME ${TARGET}*
 fi
 
 exit 0
