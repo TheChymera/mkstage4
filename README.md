@@ -41,12 +41,14 @@ mkstage4 -t /custom/mount/point archive_name
 Command line arguments:
 
 ```
-mkstage4 [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]
+  mkstage4.sh [-q -c -b -l -k] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
   -q: activates quiet mode (no confirmation).
   -c: excludes connman network lists.
   -b: excludes boot directory.
   -l: excludes lost+found directory.
+  -e: an additional excludes directory (one dir one -e).
   -s: makes tarball of current system.
+  -k: separately save current kernel moudules and src (smaller).
   -t: makes tarball of system located at the <target-mountpoint>.
   -h: displays help message.
 ```
