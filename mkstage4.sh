@@ -25,9 +25,9 @@ USAGE="usage:\n\
   -c: excludes connman network lists.\n\
   -b: excludes boot directory.\n\
   -l: excludes lost+found directory.\n\
-  -e: an additional excludes directory (one dir one -e).\n\
+  -e: an additional excludes directory (one dir one -e, donot use it with *).\n\
   -s: makes tarball of current system.\n\
-  -k: separately save current kernel moudules and src (smaller).\n\
+  -k: separately save current kernel modules and src (smaller & save decompression time).\n\
   -t: makes tarball of system located at the <target-mountpoint>.\n\
   -h: displays help message."
 
@@ -117,7 +117,7 @@ shift;OPTIONS="$@"
 
 if [ ${S_KERNEL} -eq 1 ]
 then
-  USER_EXCL+=" --exclude=${TARGET}/usr/src/* "
+  USER_EXCL+=" --exclude=${TARGET}usr/src/* "
   if [ ${x86_64} -eq 1 ]
   then
       USER_EXCL+=" --exclude=${TARGET}lib64/modules/* "
@@ -182,6 +182,19 @@ then
   echo ""
   echo "COMMAND LINE PREVIEW:"
   echo "tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME ${TARGET}*"
+  if [ ${S_KERNEL} -eq 1 ]
+  then
+    echo ""
+    echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.ksrc ${TARGET}usr/src/linux-$(uname -r)*"
+    if [ ${x86_64} -eq 1 ]
+    then
+        echo ""
+        echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib64/modules/$(uname -r)*"
+    else
+        echo ""
+        echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*"
+    fi    
+  fi
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "
   read AGREE
@@ -193,12 +206,12 @@ then
   tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME ${TARGET}*
   if [ ${S_KERNEL} -eq 1 ]
   then
-    tar $TAR_OPTIONS $OPTIONS -f ksrc_$STAGE4_FILENAME ${TARGET}usr/src/linux-$(uname -r)*
+    tar $TAR_OPTIONS -f $STAGE4_FILENAME.ksrc ${TARGET}usr/src/linux-$(uname -r)*
     if [ ${x86_64} -eq 1 ]
     then
-        tar $TAR_OPTIONS $OPTIONS -f kmod_$STAGE4_FILENAME ${TARGET}lib64/modules/$(uname -r)*
+        tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib64/modules/$(uname -r)*
     else
-        tar $TAR_OPTIONS $OPTIONS -f kmod_$STAGE4_FILENAME ${TARGET}lib/modules/$(uname -r)*
+        tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*
     fi    
     
   fi
