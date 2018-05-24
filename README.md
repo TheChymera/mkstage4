@@ -55,32 +55,6 @@ Command line arguments:
   -h: displays help message.
 ```
 
-eg.
-```bash
-liuk@localhost ~/proj/mkstage4 $ sudo ./mkstage4.sh -l -s -k -e /dataA -e /home/liuk/dataZ1/ /dataB/gentoo-stage4-20180511 --exclude=/dataB/* --exclude=/ssd/*
-Are you sure that you want to make a stage 4 tarball of the system
-located under the following directory?
-/
-
-WARNING: since all data is saved by default the user should exclude all
-security- or privacy-related files and directories, which are not
-already excluded by mkstage4 options (such as -c), manually per cmdline.
-example: $ mkstage4.sh -s /my-backup --exclude=/etc/ssh/ssh_host*
-
-COMMAND LINE PREVIEW:
-tar -cjpP --ignore-failed-read --exclude=/home/*/.bash_history --exclude=/dev/* --exclude=/var/tmp/* --exclude=/media/* --exclude=/mnt/*/* --exclude=/proc/* --exclude=/run/* --exclude=/sys/* --exclude=/tmp/* --exclude=/usr/portage/* --exclude=/var/lock/* --exclude=/var/log/* --exclude=/var/run/* --exclude=/dataA --exclude=/home/liuk/dataZ1/ --exclude=/usr/src/*  --exclude=/lib64/modules/*  --exclude=dataB/gentoo-stage4-20180511.tar.bz2 --exclude=lost+found --exclude=/dataB/* --exclude=/ssd/* -f /dataB/gentoo-stage4-20180511.tar.bz2 /*
-
-tar -cjpP --ignore-failed-read -f /dataB/gentoo-stage4-20180511.tar.bz2.ksrc /usr/src/linux-4.16.6-gentoo*
-
-tar -cjpP --ignore-failed-read -f /dataB/gentoo-stage4-20180511.tar.bz2.kmod /lib64/modules/4.16.6-gentoo*
-
-Type "yes" to continue or anything else to quit: yes
-```
-
-### -k separately save current kernel modules and src
-
-  It will save current running kernel modules and src in separate tar file. It save decompression time.
-
 ## Extract Tarball
 
 Tarballs created with mkstage4 can be extracted with:
