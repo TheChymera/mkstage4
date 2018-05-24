@@ -5,6 +5,8 @@ The script is a new edition of an earlier [mkstage4 script](https://github.com/g
  
 More information on mkstage4 can be found on its own Chymeric Tutorials article: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
 
+Chinese Introduction [中文说明](http://liuk.io/blog/gentoo-stage4)
+
 ## Installation
 
 The script can be run directly from its containing folder (and thus, is installed simply by downloading or cloning it from here - and adding run permissions):
@@ -41,12 +43,14 @@ mkstage4 -t /custom/mount/point archive_name
 Command line arguments:
 
 ```
-mkstage4 [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]
+  mkstage4.sh [-q -c -b -l -k] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
   -q: activates quiet mode (no confirmation).
   -c: excludes connman network lists.
   -b: excludes boot directory.
   -l: excludes lost+found directory.
+  -e: an additional excludes directory (one dir one -e).
   -s: makes tarball of current system.
+  -k: separately save current kernel modules and src (smaller & save decompression time).
   -t: makes tarball of system located at the <target-mountpoint>.
   -h: displays help message.
 ```
@@ -57,6 +61,13 @@ Tarballs created with mkstage4 can be extracted with:
 
 ```bash
 tar xvjpf archive_name.tar.bz2
+```
+
+If you use -k option, extract src & modules separately
+
+```bash
+tar xvjpf archive_name.tar.bz2.kmod
+tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
 ## Dependencies

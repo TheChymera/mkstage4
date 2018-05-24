@@ -12,18 +12,27 @@ EXCLUDE_BOOT=0
 EXCLUDE_CONNMAN=0
 EXCLUDE_LOST=0
 QUIET=0
+USER_EXCL=""
+S_KERNEL=0
+x86_64=0
+if [ `getconf LONG_BIT` = "64" ]
+then
+    x86_64=1
+fi
 USAGE="usage:\n\
-  `basename $0` [-q -c -b] [-s || -t <target-mountpoint>] <archive-filename> [custom-tar-options]\n\
+  `basename $0` [-q -c -b -l -k] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
   -q: activates quiet mode (no confirmation).\n\
   -c: excludes connman network lists.\n\
   -b: excludes boot directory.\n\
   -l: excludes lost+found directory.\n\
+  -e: an additional excludes directory (one dir one -e, donot use it with *).\n\
   -s: makes tarball of current system.\n\
+  -k: separately save current kernel modules and src (smaller & save decompression time).\n\
   -t: makes tarball of system located at the <target-mountpoint>.\n\
   -h: displays help message."
 
 # reads options:
-while getopts ':t:sqcblh' flag; do
+while getopts ':te:skqcblh' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
@@ -34,6 +43,9 @@ while getopts ':t:sqcblh' flag; do
     q)
       QUIET=1
       ;;
+    k)
+      S_KERNEL=1
+      ;;      
     c)
       EXCLUDE_CONNMAN=1
       ;;
@@ -43,6 +55,9 @@ while getopts ':t:sqcblh' flag; do
     l)
       EXCLUDE_LOST=1
       ;;
+    e)
+    USER_EXCL+=" --exclude=${OPTARG}"
+    ;;
     h)
       echo -e "$USAGE"
       exit 0
@@ -100,10 +115,23 @@ fi
 #Shifts pointer to read custom tar options
 shift;OPTIONS="$@"
 
+if [ ${S_KERNEL} -eq 1 ]
+then
+  USER_EXCL+=" --exclude=${TARGET}usr/src/* "
+  if [ ${x86_64} -eq 1 ]
+  then
+      USER_EXCL+=" --exclude=${TARGET}lib64/modules/* "
+  else
+      USER_EXCL+=" --exclude=${TARGET}lib/modules/* "
+  fi
+fi
+
+
 # Excludes:
 EXCLUDES="\
 --exclude=${TARGET}home/*/.bash_history \
 --exclude=${TARGET}dev/* \
+--exclude=${TARGET}var/tmp/* \
 --exclude=${TARGET}media/* \
 --exclude=${TARGET}mnt/*/* \
 --exclude=${TARGET}proc/* \
@@ -114,6 +142,8 @@ EXCLUDES="\
 --exclude=${TARGET}var/lock/* \
 --exclude=${TARGET}var/log/* \
 --exclude=${TARGET}var/run/*"
+
+EXCLUDES+=$USER_EXCL
 
 if [ "$TARGET" == "/" ]
 then
@@ -152,6 +182,19 @@ then
   echo ""
   echo "COMMAND LINE PREVIEW:"
   echo "tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME ${TARGET}*"
+  if [ ${S_KERNEL} -eq 1 ]
+  then
+    echo ""
+    echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.ksrc ${TARGET}usr/src/linux-$(uname -r)*"
+    if [ ${x86_64} -eq 1 ]
+    then
+        echo ""
+        echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib64/modules/$(uname -r)*"
+    else
+        echo ""
+        echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*"
+    fi    
+  fi
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "
   read AGREE
@@ -161,6 +204,17 @@ fi
 if [ "$AGREE" == "yes" ]
 then
   tar $TAR_OPTIONS $EXCLUDES $OPTIONS -f $STAGE4_FILENAME ${TARGET}*
+  if [ ${S_KERNEL} -eq 1 ]
+  then
+    tar $TAR_OPTIONS -f $STAGE4_FILENAME.ksrc ${TARGET}usr/src/linux-$(uname -r)*
+    if [ ${x86_64} -eq 1 ]
+    then
+        tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib64/modules/$(uname -r)*
+    else
+        tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*
+    fi    
+    
+  fi
 fi
 
 exit 0
