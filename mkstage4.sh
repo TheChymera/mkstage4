@@ -166,7 +166,7 @@ then
 fi
 
 # Generic tar options:
-TAR_OPTIONS="-cjpP --ignore-failed-read"
+TAR_OPTIONS="-cjpP --ignore-failed-read --xattrs-include='*.*' --numeric-owner"
 
 # if not in quiet mode, this message will be displayed:
 if [ "$AGREE" != "yes" ]
