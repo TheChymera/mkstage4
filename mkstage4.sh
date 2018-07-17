@@ -141,7 +141,9 @@ EXCLUDES="\
 --exclude=${TARGET}usr/portage/* \
 --exclude=${TARGET}var/lock/* \
 --exclude=${TARGET}var/log/* \
---exclude=${TARGET}var/run/*"
+--exclude=${TARGET}var/run/* \
+--exclude=${TARGET}var/lib/docker/*"
+
 
 EXCLUDES+=$USER_EXCL
 
