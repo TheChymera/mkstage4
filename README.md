@@ -48,6 +48,7 @@ Command line arguments:
   -c: excludes connman network lists.
   -b: excludes boot directory.
   -l: excludes lost+found directory.
+  -p: compresses parallelly using pbzip2.
   -e: an additional excludes directory (one dir one -e).
   -s: makes tarball of current system.
   -k: separately save current kernel modules and src (smaller & save decompression time).
@@ -70,10 +71,17 @@ tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
+If you have install pbzip2, you can extract parallelly with:
+```bash
+tar -I pbzip2 -xvf archive_name.tar.bz2
+```
+
 ## Dependencies
 
 * **[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** - in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) as **app-shells/bash**
 * **[tar](https://en.wikipedia.org/wiki/Tar_(computing))** - in Portage as **app-arch/tar**
+* **[pbzip2](https://launchpad.net/pbzip2)** (optional,if it's installed archive will be compressed parallelly) - in Portage as 
+**app-arch/pbzip2**
 
 *Please note that these are very basic dependencies and should already be included in any Linux system.*
 
