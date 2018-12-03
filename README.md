@@ -80,7 +80,7 @@ tar -I pbzip2 -xvf archive_name.tar.bz2
 
 * **[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** - in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) as **app-shells/bash**
 * **[tar](https://en.wikipedia.org/wiki/Tar_(computing))** - in Portage as **app-arch/tar**
-* **[pbzip2](https://launchpad.net/pbzip2)** (optional,if it's installed archive will be compressed parallelly) - in Portage as 
+* **[pbzip2](https://launchpad.net/pbzip2)** (optional,if it's installed archive can be compressed parallelly) - in Portage as 
 **app-arch/pbzip2**
 
 *Please note that these are very basic dependencies and should already be included in any Linux system.*
