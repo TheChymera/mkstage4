@@ -15,16 +15,18 @@ QUIET=0
 USER_EXCL=""
 S_KERNEL=0
 x86_64=0
+PARALLEL=0
 if [ `getconf LONG_BIT` = "64" ]
 then
     x86_64=1
 fi
 USAGE="usage:\n\
-  `basename $0` [-q -c -b -l -k] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
+  `basename $0` [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
   -q: activates quiet mode (no confirmation).\n\
   -c: excludes connman network lists.\n\
   -b: excludes boot directory.\n\
   -l: excludes lost+found directory.\n\
+  -p: compresses parallelly using pbzip2.\n\
   -e: an additional excludes directory (one dir one -e, donot use it with *).\n\
   -s: makes tarball of current system.\n\
   -k: separately save current kernel modules and src (smaller & save decompression time).\n\
@@ -32,7 +34,7 @@ USAGE="usage:\n\
   -h: displays help message."
 
 # reads options:
-while getopts ':te:skqcblh' flag; do
+while getopts ':te:skqcblph' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
@@ -56,8 +58,11 @@ while getopts ':te:skqcblh' flag; do
       EXCLUDE_LOST=1
       ;;
     e)
-    USER_EXCL+=" --exclude=${OPTARG}"
-    ;;
+      USER_EXCL+=" --exclude=${OPTARG}"
+      ;;
+    p)
+      PARALLEL=1
+      ;;
     h)
       echo -e "$USAGE"
       exit 0
@@ -168,7 +173,19 @@ then
 fi
 
 # Generic tar options:
-TAR_OPTIONS="-cjpP --ignore-failed-read --xattrs-include='*.*' --numeric-owner"
+TAR_OPTIONS="-cpP --ignore-failed-read --xattrs-include='*.*' --numeric-owner"
+
+if [ ${PARALLEL} -eq 1 ] 
+then
+  if hash pbzip2 2>/dev/null; then
+    TAR_OPTIONS+=" --use-compress-prog=pbzip2"
+  else
+    echo "WARING: pbzip2 isn't installed, single-threaded compressing is used."
+    TAR_OPTIONS+=" -j"
+  fi
+else
+  TAR_OPTIONS+=" -j"
+fi
 
 # if not in quiet mode, this message will be displayed:
 if [ "$AGREE" != "yes" ]
