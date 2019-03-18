@@ -1,6 +1,6 @@
 # mkstage4
 
-This is a bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
+This is a Bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
 The script is a new edition of an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which is itself a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintaied as of 2009). 
  
 More information on mkstage4 can be found on its own Chymeric Tutorials article: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
