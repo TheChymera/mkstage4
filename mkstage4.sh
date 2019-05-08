@@ -47,7 +47,7 @@ while getopts ':te:skqcblph' flag; do
       ;;
     k)
       S_KERNEL=1
-      ;;      
+      ;;
     c)
       EXCLUDE_CONNMAN=1
       ;;
@@ -212,7 +212,7 @@ then
     else
         echo ""
         echo  "tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*"
-    fi    
+    fi
   fi
   echo ""
   echo -n "Type \"yes\" to continue or anything else to quit: "
@@ -231,8 +231,7 @@ then
         tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib64/modules/$(uname -r)*
     else
         tar $TAR_OPTIONS -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*
-    fi    
-    
+    fi
   fi
 fi
 
