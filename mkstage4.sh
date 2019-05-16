@@ -34,7 +34,7 @@ USAGE="usage:\n\
   -h: displays help message."
 
 # reads options:
-while getopts ':te:skqcblph' flag; do
+while getopts ':t:e:skqcblph' flag; do
   case "${flag}" in
     t)
       TARGET="$OPTARG"
