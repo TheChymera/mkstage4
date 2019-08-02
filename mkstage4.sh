@@ -143,12 +143,19 @@ EXCLUDES="\
 --exclude=${TARGET}run/* \
 --exclude=${TARGET}sys/* \
 --exclude=${TARGET}tmp/* \
---exclude=${TARGET}usr/portage/* \
 --exclude=${TARGET}var/lock/* \
 --exclude=${TARGET}var/log/* \
 --exclude=${TARGET}var/run/* \
 --exclude=${TARGET}var/lib/docker/*"
 
+# Exclude the one, exisiting portage directory, since it moved from /usr to /var/db
+if [ -d ${TARGET}var/db/repos/gentoo ]; then
+  EXCLUDES+=" --exclude=${TARGET}var/db/repos/gentoo/*"
+fi
+
+if [ -d ${TARGET}usr/portage ]; then
+  EXCLUDES+=" --exclude=${TARGET}usr/portage/*"
+fi
 
 EXCLUDES+=$USER_EXCL
 
