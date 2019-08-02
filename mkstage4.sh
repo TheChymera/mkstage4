@@ -157,6 +157,15 @@ if [ -d ${TARGET}usr/portage ]; then
   EXCLUDES+=" --exclude=${TARGET}usr/portage/*"
 fi
 
+# Exclude distfiles directory, check the two default locations it has nowadays
+if [ -d ${TARGET}var/cache/distfiles/ ]; then
+  EXCLUDES+=" --exclude=${TARGET}var/cache/distfiles/*"
+fi
+
+if [ -d ${TARGET}usr/portage/distfiles ]; then
+  EXCLUDES+=" --exclude=${TARGET}usr/portage/distfiles*"
+fi
+
 EXCLUDES+=$USER_EXCL
 
 if [ "$TARGET" == "/" ]
