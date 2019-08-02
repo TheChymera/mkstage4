@@ -16,10 +16,12 @@ USER_EXCL=""
 S_KERNEL=0
 x86_64=0
 PARALLEL=0
+
 if [ `getconf LONG_BIT` = "64" ]
 then
     x86_64=1
 fi
+
 USAGE="usage:\n\
   `basename $0` [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
   -q: activates quiet mode (no confirmation).\n\
@@ -131,7 +133,6 @@ then
   fi
 fi
 
-
 # Excludes:
 EXCLUDES="\
 --exclude=${TARGET}home/*/.bash_history \
@@ -148,28 +149,47 @@ EXCLUDES="\
 --exclude=${TARGET}var/run/* \
 --exclude=${TARGET}var/lib/docker/*"
 
-# Exclude the one, exisiting portage directory, since it moved from /usr to /var/db
-if [ -d ${TARGET}var/db/repos/gentoo ]; then
-  EXCLUDES+=" --exclude=${TARGET}var/db/repos/gentoo/*"
-fi
-
-if [ -d ${TARGET}usr/portage ]; then
-  EXCLUDES+=" --exclude=${TARGET}usr/portage/*"
-fi
-
-# Exclude distfiles directory, check the two default locations it has nowadays
-if [ -d ${TARGET}var/cache/distfiles/ ]; then
-  EXCLUDES+=" --exclude=${TARGET}var/cache/distfiles/*"
-fi
-
-if [ -d ${TARGET}usr/portage/distfiles ]; then
-  EXCLUDES+=" --exclude=${TARGET}usr/portage/distfiles*"
-fi
-
 EXCLUDES+=$USER_EXCL
+
+# Exclude the default portage path(s), if we don't have portageq or are backing up a system mounted somewhere
+if ! [ "$TARGET" == "/" ]
+then
+  if [ -d ${TARGET}var/db/repos/gentoo ]
+  then
+    EXCLUDES+=" --exclude=${TARGET}var/db/repos/gentoo/*"
+  fi
+  if [ -d ${TARGET}usr/portage ]
+  then
+    EXCLUDES+=" --exclude=${TARGET}usr/portage/*"
+  fi
+  if [ -d ${TARGET}var/cache/distfiles/ ]
+  then
+    EXCLUDES+=" --exclude=${TARGET}var/cache/distfiles/*"
+  fi
+  if [ -d ${TARGET}usr/portage/distfiles ]
+  then
+    EXCLUDES+=" --exclude=${TARGET}usr/portage/distfiles/*"
+  fi
+  if [ -d ${TARGET}usr/portage/packages ]
+  then
+    EXCLUDES+=" --exclude=${TARGET}usr/portage/packages/*"
+  fi
+  if [ -d ${TARGET}/var/cache/binpkgs ]
+  then
+    EXCLUDES+=" --exclude=${TARGET}/var/cache/binpkgs/*"
+  fi
+fi
 
 if [ "$TARGET" == "/" ]
 then
+# Exclude portage automatically, if portageq is available
+    if [ `which portageq` ]
+  then
+    REPO_PATH=$(portageq get_repo_path / gentoo | sed 's/^\///')
+    DISTDIR=$(portageq distdir | sed 's/^\///')
+    PKGDIR=$(portageq pkgdir | sed 's/^\///')
+    EXCLUDES+=" --exclude=${REPO_PATH}/* --exclude=${DISTDIR}/* --exclude=${PKGDIR}/*"
+  fi
   EXCLUDES+=" --exclude=${STAGE4_FILENAME#/}"
 fi
 
