@@ -17,8 +17,8 @@ cd /your/mkstage4/directory
 chmod +x mkstage4.sh
 ```
 
-For [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives), mkstage4 is also available in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) via the *[chymeric overlay](https://github.com/TheChymera/chymeric)* (which can be enabled with just two commands, as seen in [the README](https://github.com/TheChymera/chymeric)).
-After you have enabled the overlay, just run the following command:
+For [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives), mkstage4 is also available in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) via the base Gentoo overlay.
+On any Gentoo system, just run the following command:
 
 ```
 emerge app-backup/mkstage4
