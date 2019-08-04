@@ -147,7 +147,9 @@ EXCLUDES="\
 --exclude=${TARGET}var/lock/* \
 --exclude=${TARGET}var/log/* \
 --exclude=${TARGET}var/run/* \
---exclude=${TARGET}var/lib/docker/*"
+--exclude=${TARGET}var/lib/docker/* \
+--exclude=${TARGET}var/db/repos/gentoo/* \
+--exclude=${TARGET}var/cache/distfiles/*"
 
 
 EXCLUDES+=$USER_EXCL
