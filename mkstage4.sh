@@ -16,6 +16,42 @@ USER_EXCL=""
 S_KERNEL=0
 x86_64=0
 PARALLEL=0
+HAS_PORTAGEQ=0
+
+# Excludes - whitespace delimited list of things to leave out
+EXCLUDES_LIST="
+ home/*/.bash_history\
+ dev\
+ var/tmp\
+ media\
+ mnt\
+ proc\
+ run\
+ sys\
+ tmp\
+ var/lock\
+ var/log\
+ var/run\
+ var/lib/docker"
+
+EXCLUDES_LIST_PORTAGE="
+ var/db/repos/gentoo/*\
+ usr/portage*\
+ var/cache/distfiles/*"
+ 
+# Excludes function - create tar --exclude=foo options
+exclude()
+{
+  ADDEXCLUDE=$(echo "$1" | sed 's/^\///')
+  EXCLUDES+=" --exclude=${TARGET}${ADDEXCLUDE}"
+}
+
+# Check if portageq is available
+if [ `which portageq` ]
+then
+	HAS_PORTAGEQ=1
+fi
+
 if [ `getconf LONG_BIT` = "64" ]
 then
     x86_64=1
@@ -122,56 +158,48 @@ shift;OPTIONS="$@"
 
 if [ ${S_KERNEL} -eq 1 ]
 then
-  USER_EXCL+=" --exclude=${TARGET}usr/src/* "
+  EXCLUDES_LIST+=" usr/src/*"
   if [ ${x86_64} -eq 1 ]
   then
-      USER_EXCL+=" --exclude=${TARGET}lib64/modules/* "
+      EXCLUDES_LIST+=" lib64/modules/*"
   else
-      USER_EXCL+=" --exclude=${TARGET}lib/modules/* "
+      EXCLUDES_LIST+=" lib/modules/*"
   fi
 fi
 
 
-# Excludes:
-EXCLUDES="\
---exclude=${TARGET}home/*/.bash_history \
---exclude=${TARGET}dev/* \
---exclude=${TARGET}var/tmp/* \
---exclude=${TARGET}media/* \
---exclude=${TARGET}mnt/*/* \
---exclude=${TARGET}proc/* \
---exclude=${TARGET}run/* \
---exclude=${TARGET}sys/* \
---exclude=${TARGET}tmp/* \
---exclude=${TARGET}usr/portage/* \
---exclude=${TARGET}var/lock/* \
---exclude=${TARGET}var/log/* \
---exclude=${TARGET}var/run/* \
---exclude=${TARGET}var/lib/docker/* \
---exclude=${TARGET}var/db/repos/gentoo/* \
---exclude=${TARGET}var/cache/distfiles/*"
-
-
 EXCLUDES+=$USER_EXCL
 
+# Exclude backup archive file name
+# Exclude portage repository and distfiles by portageq info
+# Revert to default, if portageq is not available or backup source is not host system
 if [ "$TARGET" == "/" ]
 then
-  EXCLUDES+=" --exclude=${STAGE4_FILENAME#/}"
+  EXCLUDES_LIST+=" ${STAGE4_FILENAME#/}"
+  if [ ${HAS_PORTAGEQ} == 1 ]
+  then
+	  EXCLUDES_LIST+=" $(portageq get_repo_path / gentoo)"
+	  EXCLUDES_LIST+=" $(portageq distdir)"
+  else
+	  EXCLUDES_LIST+="${EXCLUDES_LIST_PORTAGE}"
+  fi
+else
+  EXCLUDES_LIST+="${EXCLUDES_LIST_PORTAGE}"
 fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=${TARGET}var/lib/connman/*"
+  EXCLUDES_LIST+=" var/lib/connman/*"
 fi
 
 if [ ${EXCLUDE_BOOT} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=${TARGET}boot/*"
+  EXCLUDES_LIST+=" boot/*"
 fi
 
 if [ ${EXCLUDE_LOST} -eq 1 ]
 then
-  EXCLUDES+=" --exclude=lost+found"
+  EXCLUDES_LIST+=" lost+found"
 fi
 
 # Generic tar options:
@@ -188,6 +216,12 @@ then
 else
   TAR_OPTIONS+=" -j"
 fi
+
+# Loop through the final excludes list, before starting
+for i in ${EXCLUDES_LIST[@]}
+do
+	exclude "$i"
+done
 
 # if not in quiet mode, this message will be displayed:
 if [ "$AGREE" != "yes" ]
