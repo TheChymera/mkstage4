@@ -13,6 +13,7 @@ EXCLUDE_CONNMAN=0
 EXCLUDE_LOST=0
 QUIET=0
 USER_EXCL=""
+USER_EXCL_FAILED=""
 S_KERNEL=0
 x86_64=0
 PARALLEL=0
@@ -65,7 +66,12 @@ while getopts ':t:e:skqcblph' flag; do
       EXCLUDE_LOST=1
       ;;
     e)
-      USER_EXCL+=" --exclude=${OPTARG}"
+      if [ -e ${OPTARG} ]
+      then
+        USER_EXCL+=" --exclude=${OPTARG}"
+      else
+        USER_EXCL_FAILED+="${OPTARG} "
+      fi
       ;;
     p)
       PARALLEL=1
@@ -204,6 +210,20 @@ then
   fi
 else
   TAR_OPTIONS+=" -j"
+fi
+
+if [ -n  "$USER_EXCL_FAILED" ]
+then
+  echo -e "\e[33;1mWARNING:\e[0;1m Following user-specified exclude object(s) were not found: \e[0m${USER_EXCL_FAILED}"
+  echo "Continue anyway?"
+  echo -n "Type \"yes\" to continue or anything else to quit: "
+  read AGREE_MISMATCH
+  if [ "$AGREE_MISMATCH" != "yes" ]
+  then
+	exit 0
+  else
+	echo ""
+  fi
 fi
 
 # if not in quiet mode, this message will be displayed:
