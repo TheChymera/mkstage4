@@ -16,6 +16,13 @@ USER_EXCL=""
 S_KERNEL=0
 x86_64=0
 PARALLEL=0
+HAS_PORTAGEQ=0
+
+if [ `which portageq` ]
+then
+  HAS_PORTAGEQ=1
+fi
+
 if [ `getconf LONG_BIT` = "64" ]
 then
     x86_64=1
@@ -143,18 +150,30 @@ EXCLUDES="\
 --exclude=${TARGET}run/* \
 --exclude=${TARGET}sys/* \
 --exclude=${TARGET}tmp/* \
---exclude=${TARGET}usr/portage/* \
 --exclude=${TARGET}var/lock/* \
 --exclude=${TARGET}var/log/* \
 --exclude=${TARGET}var/run/* \
---exclude=${TARGET}var/lib/docker/*"
+--exclude=${TARGET}var/lib/docker/* "
 
+EXCLUDES_DEFAULT_PORTAGE="\
+ --exclude=${TARGET}var/db/repos/gentoo/* \
+ --exclude=${TARGET}var/cache/distfiles/* \
+ --exclude=${TARGET}usr/portage/*"
 
 EXCLUDES+=$USER_EXCL
 
 if [ "$TARGET" == "/" ]
 then
   EXCLUDES+=" --exclude=${STAGE4_FILENAME#/}"
+  if [ ${HAS_PORTAGEQ} == 1 ]
+  then
+	  EXCLUDES+=" --exclude=$(portageq get_repo_path / gentoo)/*"
+	  EXCLUDES+=" --exclude=$(portageq distdir)/*"
+  else
+	  EXCLUDES+="${EXCLUDES_DEFAULT_PORTAGE}"
+  fi
+else
+	  EXCLUDES+="${EXCLUDES_DEFAULT_PORTAGE}"
 fi
 
 if [ ${EXCLUDE_CONNMAN} -eq 1 ]
