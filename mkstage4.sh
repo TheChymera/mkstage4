@@ -1,7 +1,6 @@
 #!/bin/bash
-
 # checks if run as root:
-if [ "$(whoami)" != "root" ]
+if [ "$(whoami)" != 'root' ]
 then
 	echo "$(basename "$0"): must be root."
 	exit 1
@@ -14,7 +13,6 @@ EXCLUDE_LOST=0
 QUIET=0
 USER_EXCL=()
 S_KERNEL=0
-x86_64=0
 PARALLEL=0
 HAS_PORTAGEQ=0
 
@@ -23,10 +21,6 @@ then
 	HAS_PORTAGEQ=1
 fi
 
-if [ "$(getconf LONG_BIT)" == "64" ]
-then
-		x86_64=1
-fi
 USAGE="usage:\n\
 	$(basename "$0") [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
 	-q: activates quiet mode (no confirmation).\n\
@@ -94,7 +88,7 @@ then
 fi
 
 # make sure TARGET path ends with slash
-if [[ "$TARGET" != */	]]
+if [[ "$TARGET" != */ ]]
 then
 	TARGET="${TARGET}/"
 fi
@@ -112,13 +106,13 @@ then
 fi
 
 # checks for quiet mode (no confirmation)
-if ((QUIET == 1))
+if ((QUIET))
 then
 	AGREE="yes"
 fi
 
 # determines if filename was given with relative or absolute path
-if (($(grep -c '^\/' <<< "$ARCHIVE") > 0));
+if (($(grep -c '^/' <<< "$ARCHIVE") > 0))
 then
 	STAGE4_FILENAME="${ARCHIVE}.tar.bz2"
 else
@@ -128,48 +122,45 @@ fi
 #Shifts pointer to read custom tar options
 shift
 mapfile -t OPTIONS <<< "$@"
+# Handle when no options are passed
+((${#OPTIONS[@]} == 1)) && [ -z "${OPTIONS[0]}" ] && unset OPTIONS
 
-if ((S_KERNEL == 1))
+if ((S_KERNEL))
 then
 	USER_EXCL+=("--exclude=${TARGET}usr/src/*")
-	if ((x86_64 == 1))
-	then
-			USER_EXCL+=("--exclude=${TARGET}lib64/modules/*")
-	else
-			USER_EXCL+=("--exclude=${TARGET}lib/modules/*")
-	fi
+    USER_EXCL+=("--exclude=${TARGET}lib*/modules/*")
 fi
 
 
 # Excludes:
 EXCLUDES=(
-		"--exclude=${TARGET}home/*/.bash_history"
-		"--exclude=${TARGET}dev/*"
-		"--exclude=${TARGET}var/tmp/*"
-		"--exclude=${TARGET}media/*"
-		"--exclude=${TARGET}mnt/*/*"
-		"--exclude=${TARGET}proc/*"
-		"--exclude=${TARGET}run/*"
-		"--exclude=${TARGET}sys/*"
-		"--exclude=${TARGET}tmp/*"
-		"--exclude=${TARGET}var/lock/*"
-		"--exclude=${TARGET}var/log/*"
-		"--exclude=${TARGET}var/run/*"
-		"--exclude=${TARGET}var/lib/docker/*"
+	"--exclude=${TARGET}home/*/.bash_history"
+	"--exclude=${TARGET}dev/*"
+	"--exclude=${TARGET}var/tmp/*"
+	"--exclude=${TARGET}media/*"
+	"--exclude=${TARGET}mnt/*/*"
+	"--exclude=${TARGET}proc/*"
+	"--exclude=${TARGET}run/*"
+	"--exclude=${TARGET}sys/*"
+	"--exclude=${TARGET}tmp/*"
+	"--exclude=${TARGET}var/lock/*"
+	"--exclude=${TARGET}var/log/*"
+	"--exclude=${TARGET}var/run/*"
+	"--exclude=${TARGET}var/lib/docker/*"
 )
 
 EXCLUDES_DEFAULT_PORTAGE=(
-		"--exclude=${TARGET}var/db/repos/gentoo/*"
-		"--exclude=${TARGET}var/cache/distfiles/*"
-		"--exclude=${TARGET}usr/portage/*"
+	"--exclude=${TARGET}var/db/repos/gentoo/*"
+	"--exclude=${TARGET}var/cache/distfiles/*"
+	"--exclude=${TARGET}usr/portage/*"
 )
 
 EXCLUDES+=("${USER_EXCL[@]}")
 
 if [ "$TARGET" == '/' ]
 then
-	EXCLUDES+=("--exclude=${STAGE4_FILENAME#/}")
-	if ((HAS_PORTAGEQ == 1))
+	EXCLUDES+=("--exclude=$(realpath "$STAGE4_FILENAME")")
+	if ((HAS_PORTAGEQ))
 	then
 		EXCLUDES+=("--exclude=$(portageq get_repo_path / gentoo)/*")
 		EXCLUDES+=("--exclude=$(portageq distdir)/*")
@@ -177,20 +168,20 @@ then
 		EXCLUDES+=("${EXCLUDES_DEFAULT_PORTAGE[@]}")
 	fi
 else
-		EXCLUDES+=("${EXCLUDES_DEFAULT_PORTAGE[@]}")
+	EXCLUDES+=("${EXCLUDES_DEFAULT_PORTAGE[@]}")
 fi
 
-if ((EXCLUDE_CONNMAN == 1))
+if ((EXCLUDE_CONNMAN))
 then
 	EXCLUDES+=("--exclude=${TARGET}var/lib/connman/*")
 fi
 
-if ((EXCLUDE_BOOT == 1))
+if ((EXCLUDE_BOOT))
 then
 	EXCLUDES+=("--exclude=${TARGET}boot/*")
 fi
 
-if ((EXCLUDE_LOST == 1))
+if ((EXCLUDE_LOST))
 then
 	EXCLUDES+=("--exclude=lost+found")
 fi
@@ -198,7 +189,7 @@ fi
 # Generic tar options:
 TAR_OPTIONS=(-cpP --ignore-failed-read "--xattrs-include='*.*'" --numeric-owner)
 
-if [ ${PARALLEL} -eq 1 ]
+if ((PARALLEL))
 then
 	if command -v pbzip2 &>/dev/null; then
 		TAR_OPTIONS+=("--use-compress-prog=pbzip2")
@@ -211,49 +202,37 @@ else
 fi
 
 # if not in quiet mode, this message will be displayed:
-if [[ "x$AGREE" != 'xyes' ]]
+if [[ "$AGREE" != 'yes' ]]
 then
 	echo "Are you sure that you want to make a stage 4 tarball of the system"
 	echo "located under the following directory?"
 	echo "$TARGET"
-	echo ""
+	echo
 	echo "WARNING: since all data is saved by default the user should exclude all"
 	echo "security- or privacy-related files and directories, which are not"
 	echo "already excluded by mkstage4 options (such as -c), manually per cmdline."
 	echo "example: \$ $(basename "$0") -s /my-backup --exclude=/etc/ssh/ssh_host*"
-	echo ""
+	echo
 	echo "COMMAND LINE PREVIEW:"
-	echo "tar ${TAR_OPTIONS[*]} ${EXCLUDES[*]} ${OPTIONS[*]} -f $STAGE4_FILENAME ${TARGET}*"
-	if ((S_KERNEL == 1))
+	echo 'tar' "${TAR_OPTIONS[@]}" "${EXCLUDES[@]}" "${OPTIONS[@]}" -f "$STAGE4_FILENAME" ${TARGET}*
+	if ((S_KERNEL))
 	then
-		echo ""
-		echo	"tar ${TAR_OPTIONS[*]} -f $STAGE4_FILENAME.ksrc ${TARGET}usr/src/linux-$(uname -r)*"
-		if ((x86_64 == 1))
-		then
-				echo ""
-				echo	"tar ${TAR_OPTIONS[*]} -f $STAGE4_FILENAME.kmod ${TARGET}lib64/modules/$(uname -r)*"
-		else
-				echo ""
-				echo	"tar ${TAR_OPTIONS[*]} -f $STAGE4_FILENAME.kmod ${TARGET}lib/modules/$(uname -r)*"
-		fi
+		echo
+		echo 'tar' "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.ksrc" "${TARGET}usr/src/linux-$(uname -r)"*
+        echo 'tar' "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib"*"/modules/$(uname -r)"*
 	fi
-	echo ""
-	echo -n "Type \"yes\" to continue or anything else to quit: "
+	echo
+	echo -n 'Type "yes" to continue or anything else to quit: '
 	read -r AGREE
 fi
 
 # start stage4 creation:
-if [ "$AGREE" == "yes" ]
+if [ "$AGREE" == 'yes' ]
 then
 	tar "${TAR_OPTIONS[@]}" "${EXCLUDES[@]}" "${OPTIONS[@]}" -f "$STAGE4_FILENAME" ${TARGET}*
-	if [ ${S_KERNEL} -eq 1 ]
+	if ((S_KERNEL))
 	then
 		tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.ksrc" "${TARGET}usr/src/linux-$(uname -r)"*
-		if [ ${x86_64} -eq 1 ]
-		then
-				tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib64/modules/$(uname -r)"*
-		else
-				tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib/modules/$(uname -r)"*
-		fi
+        tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib"*"/modules/$(uname -r)"*
 	fi
 fi
