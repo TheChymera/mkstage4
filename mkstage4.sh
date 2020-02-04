@@ -8,7 +8,7 @@ fi
 
 #set flag variables to null
 EXCLUDE_BOOT=0
-EXCLUDE_CONNMAN=0
+EXCLUDE_CONFIDENTIAL=0
 EXCLUDE_LOST=0
 QUIET=0
 USER_EXCL=()
@@ -24,7 +24,7 @@ fi
 USAGE="usage:\n\
 	$(basename "$0") [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
 	-q: activates quiet mode (no confirmation).\n\
-	-c: excludes connman network lists.\n\
+	-c: excludes some confidential files (currently only .bash_history and connman network lists).\n\
 	-b: excludes boot directory.\n\
 	-l: excludes lost+found directory.\n\
 	-p: compresses parallelly using pbzip2.\n\
@@ -51,7 +51,7 @@ do
 			S_KERNEL=1
 			;;
 		c)
-			EXCLUDE_CONNMAN=1
+			EXCLUDE_CONFIDENTIAL=1
 			;;
 		b)
 			EXCLUDE_BOOT=1
@@ -134,7 +134,6 @@ fi
 
 # Excludes:
 EXCLUDES=(
-	"--exclude=${TARGET}home/*/.bash_history"
 	"--exclude=${TARGET}dev/*"
 	"--exclude=${TARGET}var/tmp/*"
 	"--exclude=${TARGET}media/*"
@@ -171,8 +170,10 @@ else
 	EXCLUDES+=("${EXCLUDES_DEFAULT_PORTAGE[@]}")
 fi
 
-if ((EXCLUDE_CONNMAN))
+if ((EXCLUDE_CONFIDENTIAL))
 then
+	EXCLUDES+=("--exclude=${TARGET}home/*/.bash_history")
+	EXCLUDES+=("--exclude=${TARGET}root/.bash_history")
 	EXCLUDES+=("--exclude=${TARGET}var/lib/connman/*")
 fi
 
