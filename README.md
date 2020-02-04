@@ -61,19 +61,19 @@ Command line arguments:
 Tarballs created with mkstage4 can be extracted with:
 
 ```bash
-tar xvjpf archive_name.tar.bz2
+tar xvjpf archive_name.tar.bz2 --xattrs-include='*.*'
 ```
 
 If you use -k option, extract src & modules separately
 
 ```bash
-tar xvjpf archive_name.tar.bz2.kmod
-tar xvjpf archive_name.tar.bz2.ksrc
+tar xvjpf archive_name.tar.bz2.kmod --xattrs-include='*.*'
+tar xvjpf archive_name.tar.bz2.ksrc --xattrs-include='*.*'
 ```
 
 If you have install pbzip2, you can extract parallelly with:
 ```bash
-tar -I pbzip2 -xvf archive_name.tar.bz2
+tar -I pbzip2 -xvf archive_name.tar.bz2 --xattrs-include='*.*'
 ```
 
 ## Dependencies
