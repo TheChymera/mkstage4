@@ -128,7 +128,7 @@ mapfile -t OPTIONS <<< "$@"
 if ((S_KERNEL))
 then
 	USER_EXCL+=("--exclude=${TARGET}usr/src/*")
-    USER_EXCL+=("--exclude=${TARGET}lib*/modules/*")
+	USER_EXCL+=("--exclude=${TARGET}lib*/modules/*")
 fi
 
 
@@ -219,7 +219,7 @@ then
 	then
 		echo
 		echo 'tar' "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.ksrc" "${TARGET}usr/src/linux-$(uname -r)"*
-        echo 'tar' "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib"*"/modules/$(uname -r)"*
+		echo 'tar' "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib"*"/modules/$(uname -r)"*
 	fi
 	echo
 	echo -n 'Type "yes" to continue or anything else to quit: '
@@ -233,6 +233,6 @@ then
 	if ((S_KERNEL))
 	then
 		tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.ksrc" "${TARGET}usr/src/linux-$(uname -r)"*
-        tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib"*"/modules/$(uname -r)"*
+		tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.kmod" "${TARGET}lib"*"/modules/$(uname -r)"*
 	fi
 fi
