@@ -65,6 +65,12 @@ Tarballs created with mkstage4 can be extracted with:
 tar xvjpf archive_name.tar.bz2
 ```
 
+To preserve binary attributes and use numeric owner identifiers (considered good practice on Gentoo), you can simply append the relevant flags to the respective `tar` commands:
+
+```bash
+tar xvjpf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
+```
+
 If you use the `-k` option, extract `src` and the modules separately
 
 ```bash
