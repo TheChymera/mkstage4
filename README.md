@@ -1,11 +1,12 @@
 # mkstage4
 
 This is a Bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
-The script is a new edition of an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which is itself a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintaied as of 2009). 
- 
-More information on mkstage4 can be found on its own Chymeric Tutorials article: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
+The script was inspired by an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which itself was a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintaied as of 2009).
 
-Chinese Introduction [中文说明](http://liuk.io/blog/gentoo-stage4)
+More information on mkstage4 can be found on the following blogs, though instructions may be outdated compared to the current version, best documented by this `README` file:
+
+* English: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
+* Chinese: [中文说明](http://liuk.io/blog/gentoo-stage4)
 
 ## Installation
 
@@ -34,7 +35,7 @@ Archive your current system (mounted at /):
 mkstage4 -s archive_name
 ```
 
-Archive system located at a custom mount point:
+Archive a system located at a custom mount point:
 
 ```bash
 mkstage4 -t /custom/mount/point archive_name
@@ -64,14 +65,15 @@ Tarballs created with mkstage4 can be extracted with:
 tar xvjpf archive_name.tar.bz2
 ```
 
-If you use -k option, extract src & modules separately
+If you use the `-k` option, extract `src` and the modules separately
 
 ```bash
 tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
-If you have install pbzip2, you can extract parallelly with:
+If you have pbzip2 installed, you can extract using parallelization, with:
+
 ```bash
 tar -I pbzip2 -xvf archive_name.tar.bz2
 ```
