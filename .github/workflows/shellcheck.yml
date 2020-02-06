@@ -1,0 +1,17 @@
+name: "Shellcheck"
+on: [push, pull_request]
+jobs:
+    shellcheck:
+        name: "Shellcheck job"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Check out code"
+              uses: actions/checkout@v1
+
+            - name: "Run Shellcheck"
+              uses: azohra/shell-linter@v0.2.0
+
+            - name: "Run Shellcheck on BATS files"
+              uses: azohra/shell-linter@v0.2.0
+              with:
+                  path: "tests/*.bash,tests/*.bats"
