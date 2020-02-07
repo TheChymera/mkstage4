@@ -157,6 +157,7 @@ EXCLUDES_DEFAULT_PORTAGE=(
 
 EXCLUDES+=("${USER_EXCL[@]}")
 
+
 if [ "$TARGET" == '/' ]
 then
 	EXCLUDES+=("--exclude=$(realpath "$STAGE4_FILENAME")")
