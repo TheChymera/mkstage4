@@ -3,8 +3,9 @@
 test_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PATH="$test_directory/..:$PATH"
 
-test_uname="test-uname"
-uname() { echo "$test_uname"; }
+# export so that uname hook in mkstage4.sh has access to var
+export TEST_UNAME="test-uname"
+uname() { echo "$TEST_UNAME"; }
 export -f uname
 
 # bypasses mkstage4.sh root check
