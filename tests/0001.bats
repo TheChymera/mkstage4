@@ -6,10 +6,10 @@ setup() {
     f test/.hiddenfile
     f test/usr/bin/ping
     f test/usr/bin/lost+found
-    f test/usr/src/linux-"$test_uname"/.config
-    f test/usr/src/linux-"$test_uname"/vmlinux
-    f test/lib/modules/"$test_uname"/mod.ko
-    f test/lib64/modules/"$test_uname"/mod.ko
+    f test/usr/src/linux-"$TEST_UNAME"/.config
+    f test/usr/src/linux-"$TEST_UNAME"/vmlinux
+    f test/lib/modules/"$TEST_UNAME"/mod.ko
+    f test/lib64/modules/"$TEST_UNAME"/mod.ko
     f test/dev/sda
     f test/proc/cpuinfo
     f test/run/pid
@@ -43,19 +43,19 @@ teardown() {
 }
 
 @test "/usr/src/linux-uname/.config is included" {
-    assert_tar_includes test/usr/src/linux-"$test_uname"/.config
+    assert_tar_includes test/usr/src/linux-"$TEST_UNAME"/.config
 }
 
 @test "/usr/src/linux-uname/vmlinux is included" {
-    assert_tar_includes test/usr/src/linux-"$test_uname"/vmlinux
+    assert_tar_includes test/usr/src/linux-"$TEST_UNAME"/vmlinux
 }
 
 @test "/lib/modules/uname/mod.ko is included" {
-    assert_tar_includes test/lib/modules/"$test_uname"/mod.ko
+    assert_tar_includes test/lib/modules/"$TEST_UNAME"/mod.ko
 }
 
 @test "/lib64/modules/uname/mod.ko is included" {
-    assert_tar_includes test/lib64/modules/"$test_uname"/mod.ko
+    assert_tar_includes test/lib64/modules/"$TEST_UNAME"/mod.ko
 }
 
 @test "/dev/* is excluded" {
