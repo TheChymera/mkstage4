@@ -1,3 +1,6 @@
+![Tests](https://github.com/TheChymera/mkstage4/workflows/Tests/badge.svg)
+![Shellcheck](https://github.com/TheChymera/mkstage4/workflows/Shellcheck/badge.svg)
+
 # mkstage4
 
 This is a Bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
