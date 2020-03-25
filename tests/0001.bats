@@ -159,7 +159,6 @@ teardown() {
 }
 
 @test "/.hiddenfile is included" {
-    skip "TODO: Not yet implemented"
     assert_tar_includes test/.hiddenfile
 }
 
