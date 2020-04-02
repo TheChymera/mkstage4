@@ -1,5 +1,4 @@
-![Tests](https://github.com/TheChymera/mkstage4/workflows/Tests/badge.svg)
-![Shellcheck](https://github.com/TheChymera/mkstage4/workflows/Shellcheck/badge.svg)
+![CI](https://github.com/TheChymera/mkstage4/workflows/CI/badge.svg)
 
 # mkstage4
 

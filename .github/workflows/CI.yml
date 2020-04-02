@@ -1,0 +1,32 @@
+name: "CI"
+on: [push, pull_request]
+jobs:
+    shellcheck:
+        name: "Shellcheck"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Check out code"
+              uses: actions/checkout@v1
+
+            - name: "Run Shellcheck"
+              uses: azohra/shell-linter@v0.2.0
+
+            - name: "Run Shellcheck on BATS files"
+              uses: azohra/shell-linter@v0.2.0
+              with:
+                  path: "tests/*.bash,tests/*.bats"
+
+    bats:
+        name: "BATS Tests"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Setup BATS testing framework"
+              uses: mig4/setup-bats@v1.0.1
+              with:
+                  bats-version: 1.1.0
+
+            - name: "Check out code"
+              uses: actions/checkout@v1
+
+            - name: "Run BATS tests"
+              run: bats -r tests
