@@ -12,6 +12,7 @@ EXCLUDE_CONFIDENTIAL=0
 EXCLUDE_LOST=0
 QUIET=0
 USER_EXCL=()
+USER_INCL=()
 S_KERNEL=0
 PARALLEL=0
 HAS_PORTAGEQ=0
@@ -22,20 +23,21 @@ then
 fi
 
 USAGE="usage:\n\
-	$(basename "$0") [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]\n\
+	$(basename "$0") [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]\n\
 	-q: activates quiet mode (no confirmation).\n\
 	-c: excludes some confidential files (currently only .bash_history and connman network lists).\n\
 	-b: excludes boot directory.\n\
 	-l: excludes lost+found directory.\n\
 	-p: compresses parallelly using pbzip2.\n\
 	-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
+	-i: an additional target to include. This has higher precedence than -e, -t, and -s.\n\
 	-s: makes tarball of current system.\n\
 	-k: separately save current kernel modules and src (smaller & save decompression time).\n\
 	-t: makes tarball of system located at the <target-mountpoint>.\n\
 	-h: displays help message."
 
 # reads options:
-while getopts ":t:e:skqcblph" flag
+while getopts ":t:e:i:skqcblph" flag
 do
 	case "$flag" in
 		t)
@@ -61,6 +63,9 @@ do
 			;;
 		e)
 			USER_EXCL+=("--exclude=${OPTARG}")
+			;;
+		i)
+			USER_INCL+=("${OPTARG}")
 			;;
 		p)
 			PARALLEL=1
@@ -156,6 +161,11 @@ EXCLUDES_DEFAULT_PORTAGE=(
 
 EXCLUDES+=("${USER_EXCL[@]}")
 
+INCLUDES=(
+)
+
+INCLUDES+=("${USER_INCL[@]}")
+
 if [ "$TARGET" == '/' ]
 then
 	EXCLUDES+=("--exclude=$(realpath "$STAGE4_FILENAME")")
@@ -215,7 +225,7 @@ then
 	echo "example: \$ $(basename "$0") -s /my-backup --exclude=/etc/ssh/ssh_host*"
 	echo
 	echo "COMMAND LINE PREVIEW:"
-	echo 'tar' "${TAR_OPTIONS[@]}" "${EXCLUDES[@]}" "${OPTIONS[@]}" -f "$STAGE4_FILENAME" "${TARGET}"
+	echo 'tar' "${TAR_OPTIONS[@]}" "${INCLUDES[@]}" "${EXCLUDES[@]}" "${OPTIONS[@]}" -f "$STAGE4_FILENAME" "${TARGET}"
 	if ((S_KERNEL))
 	then
 		echo
@@ -230,7 +240,7 @@ fi
 # start stage4 creation:
 if [ "$AGREE" == 'yes' ]
 then
-	tar "${TAR_OPTIONS[@]}" "${EXCLUDES[@]}" "${OPTIONS[@]}" -f "$STAGE4_FILENAME" "${TARGET}"
+	tar "${TAR_OPTIONS[@]}" "${INCLUDES[@]}" "${EXCLUDES[@]}" "${OPTIONS[@]}" -f "$STAGE4_FILENAME" "${TARGET}"
 	if ((S_KERNEL))
 	then
 		tar "${TAR_OPTIONS[@]}" -f "$STAGE4_FILENAME.ksrc" "${TARGET}usr/src/linux-$(uname -r)"
