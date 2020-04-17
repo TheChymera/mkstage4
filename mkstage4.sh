@@ -6,7 +6,29 @@ then
 	exit 1
 fi
 
-#set flag variables to null
+# get available compression types
+declare -A COMPRESS_TYPES
+COMPRESS_TYPES=(
+	["bz2"]="bzip2 pbzip2 lbzip2"
+	["gz"]="gzip pigz"
+	["lrz"]="lrzip"
+	["lz"]="lzip plzip"
+	["lz4"]="lz4"
+	["lzo"]="lzop"
+	["xz"]="xz pixz"
+	["zstd"]="zstd"
+	)
+declare -A COMPRESS_AVAILABLE
+for ext in "${!COMPRESS_TYPES[@]}"; do
+	for exe in ${COMPRESS_TYPES[${ext}]}; do
+		BIN=$(command -v "${exe}")
+		if [ "${BIN}" != "" ]; then
+			COMPRESS_AVAILABLE+=(["${ext}"]="${BIN}")
+		fi
+	done
+done
+
+# set flag variables to null/default
 EXCLUDE_BOOT=0
 EXCLUDE_CONFIDENTIAL=0
 EXCLUDE_LOST=0
@@ -14,8 +36,8 @@ QUIET=0
 USER_EXCL=()
 USER_INCL=()
 S_KERNEL=0
-PARALLEL=0
 HAS_PORTAGEQ=0
+COMPRESS_TYPE="bz2"
 
 if command -v portageq &>/dev/null
 then
@@ -28,16 +50,16 @@ USAGE="usage:\n\
 	-c: excludes some confidential files (currently only .bash_history and connman network lists).\n\
 	-b: excludes boot directory.\n\
 	-l: excludes lost+found directory.\n\
-	-p: compresses parallelly using pbzip2.\n\
 	-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
 	-i: an additional target to include. This has higher precedence than -e, -t, and -s.\n\
 	-s: makes tarball of current system.\n\
 	-k: separately save current kernel modules and src (smaller & save decompression time).\n\
 	-t: makes tarball of system located at the <target-mountpoint>.\n\
+	-C: specify tar compression (available: ${!COMPRESS_AVAILABLE[*]}).\n\
 	-h: displays help message."
 
 # reads options:
-while getopts ":t:e:i:skqcblph" flag
+while getopts ":t:C:e:i:skqcblh" flag
 do
 	case "$flag" in
 		t)
@@ -45,6 +67,9 @@ do
 			;;
 		s)
 			TARGET="/"
+			;;
+		C)
+			COMPRESS_TYPE="$OPTARG"
 			;;
 		q)
 			QUIET=1
@@ -66,9 +91,6 @@ do
 			;;
 		i)
 			USER_INCL+=("${OPTARG}")
-			;;
-		p)
-			PARALLEL=1
 			;;
 		h)
 			echo -e "$USAGE"
@@ -119,12 +141,30 @@ fi
 # determines if filename was given with relative or absolute path
 if (($(grep -c '^/' <<< "$ARCHIVE") > 0))
 then
-	STAGE4_FILENAME="${ARCHIVE}.tar.bz2"
+	STAGE4_FILENAME="${ARCHIVE}.tar"
 else
-	STAGE4_FILENAME="$(pwd)/${ARCHIVE}.tar.bz2"
+	STAGE4_FILENAME="$(pwd)/${ARCHIVE}.tar"
 fi
 
-#Shifts pointer to read custom tar options
+# Check if compression in option and filename
+if [ -z "$COMPRESS_TYPE" ]
+then
+	echo "$(basename "$0"): no archive compression type specified."
+	echo -e "$USAGE"
+	exit 1
+else
+	STAGE4_FILENAME="${STAGE4_FILENAME}.${COMPRESS_TYPE}"
+fi
+
+# Check if specified type is available
+if [ -z "${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}" ]
+then
+	echo "$(basename "$0"): specified archive compression type not supported."
+	echo "Supported: ${COMPRESS_AVAILABLE[*]}"
+	exit 1
+fi
+
+# Shifts pointer to read custom tar options
 shift
 mapfile -t OPTIONS <<< "$@"
 # Handle when no options are passed
@@ -197,20 +237,21 @@ then
 	EXCLUDES+=("--exclude=lost+found")
 fi
 
-# Generic tar options:
-TAR_OPTIONS=(-cpP --ignore-failed-read "--xattrs-include='*.*'" --numeric-owner)
-
-if ((PARALLEL))
+# Compression options
+COMP_OPTIONS=("${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}")
+if [[ "${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}" == *"/xz" ]]
 then
-	if command -v pbzip2 &>/dev/null; then
-		TAR_OPTIONS+=("--use-compress-prog=pbzip2")
-	else
-		echo "WARING: pbzip2 isn't installed, single-threaded compressing is used." >&2
-		TAR_OPTIONS+=("-j")
-	fi
-else
-	TAR_OPTIONS+=("-j")
+	COMP_OPTIONS+=("-T0")
 fi
+
+# Generic tar options:
+TAR_OPTIONS=(
+	-cpP
+	--ignore-failed-read
+	"--xattrs-include='*.*'"
+	--numeric-owner
+	"--use-compress-prog=${COMP_OPTIONS[@]}"
+	)
 
 # if not in quiet mode, this message will be displayed:
 if [[ "$AGREE" != 'yes' ]]

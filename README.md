@@ -1,13 +1,13 @@
-![CI](https://github.com/TheChymera/mkstage4/workflows/CI/badge.svg)
-
 # mkstage4
 
+![CI](https://github.com/TheChymera/mkstage4/workflows/CI/badge.svg)
+
 This is a Bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
-The script was inspired by an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which itself was a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintaied as of 2009).
+The script was inspired by an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which itself was a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintained as of 2009).
 
 More information on mkstage4 can be found on the following blogs, though instructions may be outdated compared to the current version, best documented by this `README` file:
 
-* English: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/). 
+* English: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/).
 * Chinese: [中文说明](http://liuk.io/blog/gentoo-stage4)
 
 ## Installation
@@ -23,7 +23,7 @@ chmod +x mkstage4.sh
 For [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives), mkstage4 is also available in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) via the base Gentoo overlay.
 On any Gentoo system, just run the following command:
 
-```
+```bash
 emerge app-backup/mkstage4
 ```
 
@@ -45,7 +45,7 @@ mkstage4 -t /custom/mount/point archive_name
 
 Command line arguments:
 
-```
+```bash
   mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
   -q: activates quiet mode (no confirmation).
   -c: excludes connman network lists.
@@ -56,6 +56,7 @@ Command line arguments:
   -s: makes tarball of current system.
   -k: separately save current kernel modules and src (smaller & save decompression time).
   -t: makes tarball of system located at the <target-mountpoint>.
+  -C: specify tar compression (shows available on runtime and default is bz2)
   -h: displays help message.
 ```
 
@@ -80,22 +81,65 @@ tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
-If you have pbzip2 installed, you can extract using parallelization, with:
+If you have one of parallel (de-)compressors installed, you can extract with:
+
+In case of pbzip2:
 
 ```bash
-tar -I pbzip2 -xvf archive_name.tar.bz2
+tar -I pbzip2 -xvf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
+```
+
+Or xz:
+
+```bash
+tar -I 'xz -T0' -xvf archive_name.tar.xz --xattrs-include='*.*' --numeric-owner
+```
+
+Some compressors have separate binaries for the decompression, like gzip:
+
+```bash
+tar -I unpigz -xvf archive_name.tar.gz --xattrs-include='*.*' --numeric-owner
 ```
 
 ## Dependencies
 
-* **[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** - in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) as **app-shells/bash**
-* **[tar](https://en.wikipedia.org/wiki/Tar_(computing))** - in Portage as **app-arch/tar**
+*Please note that these are very basic dependencies and should already be included in any Linux system.*
 
-*Please note that these are very basic dependencies and should already be included in any Linux system. Additionally, the scrip can use:*
+* **[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** - in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) as **[app-shells/bash](https://packages.gentoo.org/packages/app-shells/bash)**
+* **[tar](https://en.wikipedia.org/wiki/Tar_(computing))** - in Portage as **[app-arch/tar](https://packages.gentoo.org/packages/app-arch/tar)**
+* **[bzip2](https://gitlab.com/federicomenaquintero/bzip2)** - in Portage as **[app-arch/bzip2](https://packages.gentoo.org/packages/app-arch/bzip2)** (single thread, default compression)
 
-* **[pbzip2](https://launchpad.net/pbzip2)** (optional, if it is installed the archive can be compressed using multiple parallel threads) - in Portage as
-**app-arch/pbzip2**
 
+**Optionals**:
+*If one the following is installed the archive will be compressed using multiple parallel threads when available, in order of succession:*
+
+* `-C xz`:
+  * **[xz](https://tukaani.org/xz/)** - in Portage as **[app-arch/xz](https://packages.gentoo.org/packages/app-arch/xz-utils)**, (parallel)
+  * **[pixz](https://github.com/vasi/pixz)** - in Portage as **[app-arch/pixz](https://packages.gentoo.org/packages/app-arch/pixz)**, (parallel, indexed)
+
+* `-C bz2`:
+  * **[pbzip2](https://launchpad.net/pbzip2/)** - in Portage as **[app-arch/pbzip2](https://packages.gentoo.org/packages/app-arch/pbzip2)**, (parallel)
+  * **[lbzip2](https://github.com/kjn/lbzip2/)** - in Portage as **[app-arch/lbzip2](https://packages.gentoo.org/packages/app-arch/lbzip2)**, (parallel, faster and more efficient)
+
+* `-C gz`:
+  * **[gzip](https://www.gnu.org/software/gzip/)** - in Portage as **[app-arch/gzip](https://packages.gentoo.org/packages/app-arch/gzip)**, (single thread)
+  * **[pigz](https://www.zlib.net/pigz/)** - in Portage as **[app-arch/pigz](https://packages.gentoo.org/packages/app-arch/pigz)**, (parallel)
+
+* `-C lrz`:
+  * **[lrzip](https://github.com/ckolivas/lrzip/)** - in Portage as **[app-arch/lrzip](https://packages.gentoo.org/packages/app-arch/lrzip)**, (parallel)
+
+* `-C lz`:
+  * **[lzip](https://www.nongnu.org/lzip/)** - in Portage as **[app-arch/lzip](https://packages.gentoo.org/packages/app-arch/lzip)**, (single thread)
+  * **[plzip](https://www.nongnu.org/lzip/plzip.html)** - in Portage as **[app-arch/plzip](https://packages.gentoo.org/packages/app-arch/plzip)**, (parallel)
+
+* `-C lz4`:
+  * **[lz4](https://github.com/lz4/lz4)** - in Portage as **[app-arch/lz4](https://packages.gentoo.org/packages/app-arch/lz4)**, (parallel)
+
+* `-C lzo`:
+  * **[lzop](https://www.lzop.org/)** - in Portage as **[app-arch/lzop](https://packages.gentoo.org/packages/app-arch/lzop)**, (parallel)
+
+* `-C zstd`:
+  * **[zstd](https://facebook.github.io/zstd/)** - in Portage as **[app-arch/zstd](https://packages.gentoo.org/packages/app-arch/zstd)**, (parallel)
 
 ---
 Released under the GPLv3 license.
