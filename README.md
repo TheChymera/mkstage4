@@ -59,7 +59,9 @@ Command line arguments:
   -h: displays help message.
 ```
 
-## Extract Tarball
+## System Tarball Extraction
+
+### Single-threaded
 
 Tarballs created with mkstage4 can be extracted with:
 
@@ -80,21 +82,23 @@ tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
+### Multi-threaded
+
 If you have a parallel de/compressor installed, you can extract the archive with one of the respective commands:
 
-### pbzip2
+#### `pbzip2`
 
 ```bash
 tar -I pbzip2 -xvf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
 ```
 
-### xz
+#### `xz`
 
 ```bash
 tar -I 'xz -T0' -xvf archive_name.tar.xz --xattrs-include='*.*' --numeric-owner
 ```
 
-### gzip
+#### `gzip`
 
 Similarly to other compressors, `gzip` uses a separate binary for parallel decompression:
 
