@@ -44,8 +44,8 @@ mkstage4 -t /custom/mount/point archive_name
 
 Command line arguments:
 
-```bash
-  mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
+```console
+mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
   -q: activates quiet mode (no confirmation).
   -c: excludes connman network lists.
   -b: excludes boot directory.
