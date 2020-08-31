@@ -8,7 +8,6 @@ The script was inspired by an earlier [mkstage4 script](https://github.com/gregf
 More information on mkstage4 can be found on the following blogs, though instructions may be outdated compared to the current version, best documented by this `README` file:
 
 * English: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/).
-* Chinese: [中文说明](http://liuk.io/blog/gentoo-stage4)
 
 ## Installation
 
@@ -81,21 +80,23 @@ tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
-If you have one of parallel (de-)compressors installed, you can extract with:
+If you have a parallel de/compressor installed, you can extract the archive with one of the respective commands:
 
-In case of pbzip2:
+### pbzip2
 
 ```bash
 tar -I pbzip2 -xvf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
 ```
 
-Or xz:
+### xz
 
 ```bash
 tar -I 'xz -T0' -xvf archive_name.tar.xz --xattrs-include='*.*' --numeric-owner
 ```
 
-Some compressors have separate binaries for the decompression, like gzip:
+### gzip
+
+Similarly to other compressors, `gzip` uses a separate binary for parallel decompression:
 
 ```bash
 tar -I unpigz -xvf archive_name.tar.gz --xattrs-include='*.*' --numeric-owner
