@@ -53,7 +53,7 @@ USAGE="usage:\n\
 	-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
 	-i: an additional target to include. This has higher precedence than -e, -t, and -s.\n\
 	-s: makes tarball of current system.\n\
-	-k: separately save current kernel modules and src (smaller & save decompression time).\n\
+	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).\n\
 	-t: makes tarball of system located at the <target-mountpoint>.\n\
 	-C: specify tar compression (available: ${!COMPRESS_AVAILABLE[*]}).\n\
 	-h: displays help message."

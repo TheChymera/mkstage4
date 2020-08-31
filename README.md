@@ -53,7 +53,7 @@ Command line arguments:
   -p: compresses parallelly using pbzip2.
   -e: an additional excludes directory (one dir one -e).
   -s: makes tarball of current system.
-  -k: separately save current kernel modules and src (smaller & save decompression time).
+  -k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
   -t: makes tarball of system located at the <target-mountpoint>.
   -C: specify tar compression (shows available on runtime and default is bz2)
   -h: displays help message.
@@ -75,7 +75,7 @@ To preserve binary attributes and use numeric owner identifiers (considered good
 tar xvjpf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
 ```
 
-If you use the `-k` option, extract `src` and the modules separately:
+If you use the `-k` option, extract the `src` and modules archives separately:
 
 ```bash
 tar xvjpf archive_name.tar.bz2.kmod
