@@ -97,7 +97,11 @@ tar -I pbzip2 -xvf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
 ```bash
 tar -I 'xz -T0' -xvf archive_name.tar.xz --xattrs-include='*.*' --numeric-owner
 ```
+#### `zstd`
 
+```bash
+tar -I zstd -xvf archive_name.tar.zst --xattrs-include='*.*' --numeric-owner
+```
 #### `gzip`
 
 Similarly to other compressors, `gzip` uses a separate binary for parallel decompression:
