@@ -250,7 +250,7 @@ TAR_OPTIONS=(
 	--ignore-failed-read
 	"--xattrs-include='*.*'"
 	--numeric-owner
-	"--use-compress-prog=\"${COMP_OPTIONS[@]}\""
+	"--use-compress-prog=\'${COMP_OPTIONS[@]}\'"
 	)
 
 # if not in quiet mode, this message will be displayed:
