@@ -239,8 +239,6 @@ fi
 
 # Compression options
 COMP_OPTIONS=("${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}")
-# This currently breaks the command, and is temporarily disables, see:
-# https://github.com/TheChymera/mkstage4/issues/46
 if [[ "${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}" == *"/xz" ]]
 then
 	COMP_OPTIONS+=( "-T0" )
