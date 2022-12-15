@@ -61,7 +61,13 @@ mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional e
 
 ## System Tarball Extraction
 
-### Single-threaded
+### Automatic (Multi-threaded)
+
+We provide a script for convenient extraction, `exstage4`, which is shipped with this package.
+Currently it simply automates the Multi-threaded extraction selection listed below and otherwise has no functionality except checking that the file name looks sane.
+If in doubt, use one of the explicit extraction methods described below.
+
+### Explicit Single-threaded
 
 Tarballs created with mkstage4 can be extracted with:
 
@@ -78,7 +84,7 @@ tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
-### Multi-threaded
+### Explicit Multi-threaded
 
 If you have a parallel de/compressor installed, you can extract the archive with one of the respective commands:
 
