@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # checks if run as root:
 if [ "$(whoami)" != 'root' ]
 then
