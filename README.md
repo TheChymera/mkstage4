@@ -65,10 +65,6 @@ mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional e
 
 Tarballs created with mkstage4 can be extracted with:
 
-```bash
-tar xvjpf archive_name.tar.bz2
-```
-
 To preserve binary attributes and use numeric owner identifiers (considered good practice on Gentoo), you can simply append the relevant flags to the respective `tar` commands, e.g.:
 
 ```bash
