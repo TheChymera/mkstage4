@@ -30,6 +30,10 @@ emerge app-backup/mkstage4
 
 *If you are running the script from the containing folder (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
 
+Note that the extension will automatically be appended to the `archive_name` string based on the compression type, which can be specifiled via the `-C` parameter, if another compression than the default (`.tar.bz2`) is desired.
+
+### Examples
+
 Archive your current system (mounted at /):
 
 ```bash
@@ -42,21 +46,22 @@ Archive a system located at a custom mount point:
 mkstage4 -t /custom/mount/point archive_name
 ```
 
-Command line arguments:
+### Command line arguments
 
 ```console
-mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
-  -q: activates quiet mode (no confirmation).
-  -c: excludes connman network lists.
-  -b: excludes boot directory.
-  -l: excludes lost+found directory.
-  -p: compresses parallelly using pbzip2.
-  -e: an additional excludes directory (one dir one -e).
-  -s: makes tarball of current system.
-  -k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
-  -t: makes tarball of system located at the <target-mountpoint>.
-  -C: specify tar compression (shows available on runtime and default is bz2)
-  -h: displays help message.
+usage:
+	mkstage4 [-q -c -b -l -k] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]
+	-q: activates quiet mode (no confirmation).
+	-c: excludes some confidential files (currently only .bash_history and connman network lists).
+	-b: excludes boot directory.
+	-l: excludes lost+found directory.
+	-e: an additional excludes directory (one dir one -e, donot use it with *).
+	-i: an additional target to include. This has higher precedence than -e, -t, and -s.
+	-s: makes tarball of current system.
+	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
+	-t: makes tarball of system located at the <target-mountpoint>.
+	-C: specify tar compression (default: bz2, available: lz4 xz bz2 zst gz).
+	-h: displays help message.
 ```
 
 ## System Tarball Extraction
