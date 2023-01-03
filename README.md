@@ -49,18 +49,18 @@ mkstage4 -t /custom/mount/point archive_name
 ### Command line arguments
 
 ```console
-usage:
-	mkstage4 [-q -c -b -l -k] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]
-	-q: activates quiet mode (no confirmation).
-	-c: excludes some confidential files (currently only .bash_history and connman network lists).
+Usage:
+	mkstage4.sh [-b -c -k -l -q] [-C <compression-type>] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]
 	-b: excludes boot directory.
+	-c: excludes some confidential files (currently only .bash_history and connman network lists).
+	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
 	-l: excludes lost+found directory.
+	-q: activates quiet mode (no confirmation).
+	-C: specify tar compression (default: bz2, available: lz4 xz bz2 zst gz).
+	-s: makes tarball of current system.
+	-t: makes tarball of system located at the <target-mountpoint>.
 	-e: an additional excludes directory (one dir one -e, donot use it with *).
 	-i: an additional target to include. This has higher precedence than -e, -t, and -s.
-	-s: makes tarball of current system.
-	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
-	-t: makes tarball of system located at the <target-mountpoint>.
-	-C: specify tar compression (default: bz2, available: lz4 xz bz2 zst gz).
 	-h: displays help message.
 ```
 
