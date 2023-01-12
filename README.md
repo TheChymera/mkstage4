@@ -30,6 +30,10 @@ emerge app-backup/mkstage4
 
 *If you are running the script from the containing folder (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
 
+Note that the extension will automatically be appended to the `archive_name` string based on the compression type, which can be specifiled via the `-C` parameter, if another compression than the default (`.tar.bz2`) is desired.
+
+### Examples
+
 Archive your current system (mounted at /):
 
 ```bash
@@ -42,32 +46,35 @@ Archive a system located at a custom mount point:
 mkstage4 -t /custom/mount/point archive_name
 ```
 
-Command line arguments:
+### Command line arguments
 
 ```console
-mkstage4.sh [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] <archive-filename> [custom-tar-options]
-  -q: activates quiet mode (no confirmation).
-  -c: excludes connman network lists.
-  -b: excludes boot directory.
-  -l: excludes lost+found directory.
-  -p: compresses parallelly using pbzip2.
-  -e: an additional excludes directory (one dir one -e).
-  -s: makes tarball of current system.
-  -k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
-  -t: makes tarball of system located at the <target-mountpoint>.
-  -C: specify tar compression (shows available on runtime and default is bz2)
-  -h: displays help message.
+Usage:
+	mkstage4.sh [-b -c -k -l -q] [-C <compression-type>] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]
+	-b: excludes boot directory.
+	-c: excludes some confidential files (currently only .bash_history and connman network lists).
+	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).
+	-l: excludes lost+found directory.
+	-q: activates quiet mode (no confirmation).
+	-C: specify tar compression (default: bz2, available: lz4 xz bz2 zst gz).
+	-s: makes tarball of current system.
+	-t: makes tarball of system located at the <target-mountpoint>.
+	-e: an additional excludes directory (one dir one -e, donot use it with *).
+	-i: an additional target to include. This has higher precedence than -e, -t, and -s.
+	-h: displays help message.
 ```
 
 ## System Tarball Extraction
 
-### Single-threaded
+### Automatic (Multi-threaded)
+
+We provide a script for convenient extraction, `exstage4`, which is shipped with this package.
+Currently it simply automates the Multi-threaded extraction selection listed below and otherwise has no functionality except checking that the file name looks sane.
+If in doubt, use one of the explicit extraction methods described below.
+
+### Explicit Single-threaded
 
 Tarballs created with mkstage4 can be extracted with:
-
-```bash
-tar xvjpf archive_name.tar.bz2
-```
 
 To preserve binary attributes and use numeric owner identifiers (considered good practice on Gentoo), you can simply append the relevant flags to the respective `tar` commands, e.g.:
 
@@ -82,7 +89,7 @@ tar xvjpf archive_name.tar.bz2.kmod
 tar xvjpf archive_name.tar.bz2.ksrc
 ```
 
-### Multi-threaded
+### Explicit Multi-threaded
 
 If you have a parallel de/compressor installed, you can extract the archive with one of the respective commands:
 

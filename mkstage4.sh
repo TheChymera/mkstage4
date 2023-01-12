@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # checks if run as root:
 if [ "$(whoami)" != 'root' ]
 then
@@ -44,18 +45,18 @@ then
 	HAS_PORTAGEQ=1
 fi
 
-USAGE="usage:\n\
-	$(basename "$0") [-q -c -b -l -k -p] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]\n\
-	-q: activates quiet mode (no confirmation).\n\
-	-c: excludes some confidential files (currently only .bash_history and connman network lists).\n\
+USAGE="Usage:\n\
+	$(basename "$0") [-b -c -k -l -q] [-C <compression-type>] [-s || -t <target-mountpoint>] [-e <additional excludes dir*>] [-i <additional include target>] <archive-filename> [custom-tar-options]\n\
 	-b: excludes boot directory.\n\
+	-c: excludes some confidential files (currently only .bash_history and connman network lists).\n\
+	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).\n\
 	-l: excludes lost+found directory.\n\
+	-q: activates quiet mode (no confirmation).\n\
+	-C: specify tar compression (default: ${COMPRESS_TYPE}, available: ${!COMPRESS_AVAILABLE[*]}).\n\
+	-s: makes tarball of current system.\n\
+	-t: makes tarball of system located at the <target-mountpoint>.\n\
 	-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
 	-i: an additional target to include. This has higher precedence than -e, -t, and -s.\n\
-	-s: makes tarball of current system.\n\
-	-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).\n\
-	-t: makes tarball of system located at the <target-mountpoint>.\n\
-	-C: specify tar compression (available: ${!COMPRESS_AVAILABLE[*]}).\n\
 	-h: displays help message."
 
 # reads options:
@@ -241,16 +242,16 @@ fi
 COMP_OPTIONS=("${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}")
 if [[ "${COMPRESS_AVAILABLE[$COMPRESS_TYPE]}" == *"/xz" ]]
 then
-	COMP_OPTIONS+=("-T0")
+	COMP_OPTIONS+=( "-T0" )
 fi
 
 # Generic tar options:
 TAR_OPTIONS=(
 	-cpP
 	--ignore-failed-read
-	"--xattrs-include='*.*'"
+	--xattrs-include="*.*"
 	--numeric-owner
-	"--use-compress-prog=\"${COMP_OPTIONS[@]}\""
+	--use-compress-prog="${COMP_OPTIONS[*]}"
 	)
 
 # if not in quiet mode, this message will be displayed:
