@@ -191,6 +191,9 @@ EXCLUDES=(
 	"--exclude=${TARGET}var/lock/*"
 	"--exclude=${TARGET}var/log/*"
 	"--exclude=${TARGET}var/run/*"
+	"--exclude=${TARGET}var/lib/lxc/*"
+	"--exclude=${TARGET}var/lib/lxd/*"
+	"--exclude=${TARGET}var/lib/lxcfs/*"
 	"--exclude=${TARGET}var/lib/docker/*"
 )
 
