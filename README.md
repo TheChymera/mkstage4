@@ -1,6 +1,7 @@
 # mkstage4
 
 ![CI](https://github.com/TheChymera/mkstage4/workflows/CI/badge.svg)
+[![GitHub release](https://img.shields.io/github/release/TheChymera/mkstage4.svg)](https://GitHub.com/TheChymera/mkstage4/releases/)
 [![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/mkstage4.svg)](https://repology.org/project/mkstage4/versions)
 [![LiGurOS package](https://repology.org/badge/version-for-repo/liguros_stable/mkstage4.svg?header=LiGurOS)](https://repology.org/project/mkstage4/versions)
 
