@@ -5,12 +5,8 @@
 [![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/mkstage4.svg)](https://repology.org/project/mkstage4/versions)
 [![LiGurOS package](https://repology.org/badge/version-for-repo/liguros_stable/mkstage4.svg?header=LiGurOS)](https://repology.org/project/mkstage4/versions)
 
-This is a Bash script to create stage 4 tarballs either for the running system, or a system at a specified mount point.
+This is a Bash which creates stage 4 tarballs either for the running system, or a system at a specified mount point.
 The script was inspired by an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which itself was a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintained as of 2009).
-
-More information on mkstage4 can be found on the following blogs, though instructions may be outdated compared to the current version, best documented by this `README` file:
-
-* English: [mkstage4 - Stage 4 Tarballs Made Easy](http://tutorials.chymera.eu/blog/2014/05/18/mkstage4-stage4-tarballs-made-easy/).
 
 ## Installation
 
@@ -19,7 +15,7 @@ The script can be run directly from its containing folder (and thus, is installe
 ```bash
 git clone https://github.com/TheChymera/mkstage4.git /your/mkstage4/directory
 cd /your/mkstage4/directory
-chmod +x mkstage4.sh
+chmod +x mkstage4.sh exstage4.sh
 ```
 
 For [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives), mkstage4 is also available in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) via the base Gentoo overlay.
@@ -31,9 +27,10 @@ emerge app-backup/mkstage4
 
 ## Usage
 
-*If you are running the script from the containing folder (first install method) please make sure you use the `./mkstage4.sh` command instead of just `mkstage4`!*
+*If you are running the script from the containing folder (first install method) please make sure you use the e.g. `./mkstage4.sh` command instead of just `mkstage4`!*
 
-Note that the extension will automatically be appended to the `archive_name` string based on the compression type, which can be specifiled via the `-C` parameter, if another compression than the default (`.tar.bz2`) is desired.
+Note that the extension (e.g. `.tar.xz`) will be automatically appended to the `archive_name` string which you specify in calling the `mkstage4` command.
+This is done based on the compression type, which can be specifiled via the `-C` parameter, if another compression than the default (`bz2`, creating files ending in `.tar.bz2`) is desired.
 
 ### Examples
 
@@ -156,6 +153,3 @@ tar -I unpigz -xvf archive_name.tar.gz --xattrs-include='*.*' --numeric-owner
 * `-C zstd`:
   * **[zstd](https://facebook.github.io/zstd/)** - in Portage as **[app-arch/zstd](https://packages.gentoo.org/packages/app-arch/zstd)**, (parallel)
 
----
-Released under the GPLv3 license.
-Project led by Horea Christian (address all correspondence to: chr@chymera.eu).
