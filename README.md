@@ -5,7 +5,7 @@
 [![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/mkstage4.svg)](https://repology.org/project/mkstage4/versions)
 [![LiGurOS package](https://repology.org/badge/version-for-repo/liguros_stable/mkstage4.svg?header=LiGurOS)](https://repology.org/project/mkstage4/versions)
 
-This is a Bash which creates stage 4 tarballs either for the running system, or a system at a specified mount point.
+This is a Bash script which creates “stage 4” tarballs (i.e. system archives) either for the running system, or a system at a specified mount point.
 The script was inspired by an earlier [mkstage4 script](https://github.com/gregf/bin/blob/master/mkstage4) by Greg Fitzgerald (unmaintained as of 2012) which itself was a revamped edition of the [original mkstage4](http://blinkeye.ch/dokuwiki/doku.php/projects/mkstage4) by Reto Glauser (unmaintained as of 2009).
 
 ## Installation
