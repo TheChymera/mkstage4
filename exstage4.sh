@@ -15,11 +15,11 @@ else
 	echo "Extracting \`${STAGE_FILE}\` inplace."
 fi
 
-if [ $EXT == "xz" ]; then
+if [ "$EXT" == "xz" ]; then
 	tar -I 'xz -T0' -xvf "${STAGE_FILE}" --xattrs-include='*.*' --numeric-owner
-elif [ $EXT == "bz2" ]; then
+elif [ "$EXT" == "bz2" ]; then
 	tar -I pbzip2 -xvf "${STAGE_FILE}" --xattrs-include='*.*' --numeric-owner
-elif [ $EXT == "gz" ]; then
+elif [ "$EXT" == "gz" ]; then
 	tar -I unpigz -xvf "${STAGE_FILE}" --xattrs-include='*.*' --numeric-owner
 else
 	echo "Not sure how to unpack \`${STAGE_FILE}\`"
