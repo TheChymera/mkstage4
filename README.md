@@ -15,7 +15,7 @@ The script can be run directly from its containing folder (and thus, is installe
 ```bash
 git clone https://github.com/TheChymera/mkstage4.git /your/mkstage4/directory
 cd /your/mkstage4/directory
-chmod +x mkstage4.sh exstage4.sh
+chmod +x cpstage4.sh exstage4.sh mkstage4.sh
 ```
 
 For [Gentoo Linux](http://en.wikipedia.org/wiki/Gentoo_linux) and [Derivatives](http://en.wikipedia.org/wiki/Category:Gentoo_Linux_derivatives), mkstage4 is also available in [Portage](http://en.wikipedia.org/wiki/Portage_(software)) via the base Gentoo overlay.
@@ -44,6 +44,12 @@ Archive a system located at a custom mount point:
 
 ```bash
 mkstage4 -t /custom/mount/point archive_name
+```
+
+Copy a system to a separate drive, e.g. for quick backup.
+
+```bash
+cpstage4 / /run/media/myuser/mybackupdrive
 ```
 
 ### Command line arguments
@@ -76,7 +82,7 @@ If in doubt, use one of the explicit extraction methods described below.
 
 Tarballs created with mkstage4 can be extracted with:
 
-To preserve binary attributes and use numeric owner identifiers (considered good practice on Gentoo), you can simply append the relevant flags to the respective `tar` commands, e.g.:
+To preserve binary attributes and use numeric owner identifiers, you can simply append the relevant flags to the respective `tar` commands, e.g.:
 
 ```bash
 tar xvjpf archive_name.tar.bz2 --xattrs-include='*.*' --numeric-owner
