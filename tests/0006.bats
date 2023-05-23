@@ -11,8 +11,7 @@ setup() {
 }
 
 teardown() {
-    #rm -rf test test.tar.bz2
-    echo lala
+    rm -rf test test.tar.bz2
 }
 
 @test "/var/db/repos/gentoo/ is included" {
