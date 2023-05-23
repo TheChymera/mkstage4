@@ -77,6 +77,11 @@ Usage:
 We provide a script for convenient extraction, `exstage4`, which is shipped with this package.
 Currently it simply automates the Multi-threaded extraction selection listed below and otherwise has no functionality except checking that the file name looks sane.
 If in doubt, use one of the explicit extraction methods described below.
+Otherwise, you can extract an archive inplace with:
+
+```bash
+exstage4 archive_name.tar.bz2
+```
 
 ### Explicit Single-threaded
 

@@ -2,8 +2,6 @@
 
 STAGE_FILE=${1}
 
-echo "${STAGE_FILE}"
-
 EXT="${STAGE_FILE##*.}"
 
 TARFILE="${STAGE_FILE%%.$EXT}"
