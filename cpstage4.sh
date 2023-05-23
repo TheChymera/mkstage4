@@ -9,7 +9,6 @@ fi
 
 # set flag variables to null/default
 EXCLUDE_BOOT=0
-EXCLUDE_CONFIDENTIAL=0
 EXCLUDE_LOST=0
 QUIET=0
 HAS_PORTAGEQ=0
