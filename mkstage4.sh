@@ -212,7 +212,10 @@ then
 	EXCLUDES+=("--exclude=$(realpath "$STAGE4_FILENAME")")
 	if ((HAS_PORTAGEQ))
 	then
-		EXCLUDES+=("--exclude=$(portageq get_repo_path / gentoo)/*")
+		PORTAGEQ_REPOS=$(portageq get_repos /)
+		for i in ${PORTAGEQ_REPOS[@]}; do
+			EXCLUDES+=("--exclude=$(portageq get_repo_path / ${i})/*")
+		done
 		EXCLUDES+=("--exclude=$(portageq distdir)/*")
 	else
 		EXCLUDES+=("${EXCLUDES_DEFAULT_PORTAGE[@]}")
