@@ -28,13 +28,12 @@ USAGE="Usage:\n\
 		-b: excludes boot directory.\n\
 		-c: excludes some confidential files (currently only .bash_history and connman network lists).\n\
 		-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
-		-k: separately save current kernel modules and src (creates smaller archives and saves decompression time).\n\
 		-l: excludes lost+found directory.\n\
 		-q: activate quiet mode (no confirmation).\n\
 		-h: display help message."
 
 # reads options:
-while getopts ":e:bceklqh" flag
+while getopts ":e:bcelqh" flag
 do
 	case "$flag" in
 		c)
