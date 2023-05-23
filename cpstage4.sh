@@ -67,8 +67,8 @@ done
 
 # shifts pointer to read mandatory output file specification
 shift $((OPTIND - 1))
-SOURCE=${@:$OPTIND:1}
-DESTINATION=${@:$OPTIND+1:1}
+SOURCE=${1}
+DESTINATION=${2}
 
 if [ -z "$SOURCE" ]
 then
