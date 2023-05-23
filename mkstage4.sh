@@ -195,7 +195,7 @@ EXCLUDES=(
 )
 
 EXCLUDES_DEFAULT_PORTAGE=(
-	"--exclude=${TARGET}var/db/repos/gentoo/*"
+	"--exclude=${TARGET}var/db/repos/*"
 	"--exclude=${TARGET}var/cache/distfiles/*"
 	"--exclude=${TARGET}usr/portage/*"
 )
