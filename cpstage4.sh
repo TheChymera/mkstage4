@@ -146,6 +146,13 @@ then
 	EXCLUDES+=("--exclude=${TARGET}boot/*")
 fi
 
+if ((EXCLUDE_CONFIDENTIAL))
+then
+	EXCLUDES+=("--exclude=${TARGET}home/*/.bash_history")
+	EXCLUDES+=("--exclude=${TARGET}root/.bash_history")
+	EXCLUDES+=("--exclude=${TARGET}var/lib/connman/*")
+fi
+
 if ((EXCLUDE_LOST))
 then
 	EXCLUDES+=("--exclude=lost+found")
