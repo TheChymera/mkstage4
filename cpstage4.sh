@@ -161,7 +161,7 @@ fi
 RSYNC_OPTIONS=(
 	-avxHAXS
 	--numeric-ids
-	--info=progress2
+	"--info=progress2"
 	)
 
 # if not in quiet mode, this message will be displayed:
