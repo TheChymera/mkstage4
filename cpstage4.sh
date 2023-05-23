@@ -102,36 +102,35 @@ fi
 
 # Excludes:
 EXCLUDES=(
-	"--exclude=${TARGET}dev/*"
-	"--exclude=${TARGET}var/tmp/*"
-	"--exclude=${TARGET}media/*"
-	"--exclude=${TARGET}mnt/*/*"
-	"--exclude=${TARGET}proc/*"
-	"--exclude=${TARGET}run/*"
-	"--exclude=${TARGET}sys/*"
-	"--exclude=${TARGET}tmp/*"
-	"--exclude=${TARGET}var/lock/*"
-	"--exclude=${TARGET}var/log/*"
-	"--exclude=${TARGET}var/run/*"
-	"--exclude=${TARGET}var/lib/docker/*"
+	"--exclude=${SOURCE}dev/*"
+	"--exclude=${SOURCE}var/tmp/*"
+	"--exclude=${SOURCE}media/*"
+	"--exclude=${SOURCE}mnt/*/*"
+	"--exclude=${SOURCE}proc/*"
+	"--exclude=${SOURCE}run/*"
+	"--exclude=${SOURCE}sys/*"
+	"--exclude=${SOURCE}tmp/*"
+	"--exclude=${SOURCE}var/lock/*"
+	"--exclude=${SOURCE}var/log/*"
+	"--exclude=${SOURCE}var/run/*"
+	"--exclude=${SOURCE}var/lib/docker/*"
 )
 
 EXCLUDES_DEFAULT_PORTAGE=(
-	"--exclude=${TARGET}var/db/repos/gentoo/*"
-	"--exclude=${TARGET}var/cache/distfiles/*"
-	"--exclude=${TARGET}usr/portage/*"
+	"--exclude=${SOURCE}var/db/repos/gentoo/*"
+	"--exclude=${SOURCE}var/cache/distfiles/*"
+	"--exclude=${SOURCE}usr/portage/*"
 )
 
 EXCLUDES+=("${USER_EXCL[@]}")
 
-if [ "$TARGET" == '/' ]
+if [ "$SOURCE" == '/' ]
 then
-	EXCLUDES+=("--exclude=$(realpath "$STAGE4_FILENAME")")
 	if ((HAS_PORTAGEQ))
 	then
 		PORTAGEQ_REPOS=$(portageq get_repos /)
 		for i in ${PORTAGEQ_REPOS}; do
-			EXCLUDES+=("--exclude=$(portageq get_repo_path / ${i})/*")
+			EXCLUDES+=(--exclude=$(portageq get_repo_path / "${i}")/*)
 		done
 		EXCLUDES+=("--exclude=$(portageq distdir)/*")
 	else
@@ -143,14 +142,14 @@ fi
 
 if ((EXCLUDE_BOOT))
 then
-	EXCLUDES+=("--exclude=${TARGET}boot/*")
+	EXCLUDES+=("--exclude=${SOURCE}boot/*")
 fi
 
 if ((EXCLUDE_CONFIDENTIAL))
 then
-	EXCLUDES+=("--exclude=${TARGET}home/*/.bash_history")
-	EXCLUDES+=("--exclude=${TARGET}root/.bash_history")
-	EXCLUDES+=("--exclude=${TARGET}var/lib/connman/*")
+	EXCLUDES+=("--exclude=${SOURCE}home/*/.bash_history")
+	EXCLUDES+=("--exclude=${SOURCE}root/.bash_history")
+	EXCLUDES+=("--exclude=${SOURCE}var/lib/connman/*")
 fi
 
 if ((EXCLUDE_LOST))
@@ -176,7 +175,7 @@ then
 	echo "WARNING: since all data is copied by default the user should exclude all"
 	echo "security- or privacy-related files and directories, which are not"
 	echo "already excluded, manually per cmdline."
-	echo "example: \$ $(basename "$0") --exclude=/etc/ssh/ssh_host* <target> <destination>"
+	echo "example: \$ $(basename "$0") --exclude=/etc/ssh/ssh_host* <source> <destination>"
 	echo
 	echo "COMMAND LINE PREVIEW:"
 	echo 'rsync' "${RSYNC_OPTIONS[@]}" "${EXCLUDES[@]}" "${SOURCE}" "${DESTINATION}"
