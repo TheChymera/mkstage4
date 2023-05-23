@@ -130,7 +130,8 @@ then
 	then
 		PORTAGEQ_REPOS=$(portageq get_repos /)
 		for i in ${PORTAGEQ_REPOS}; do
-			EXCLUDES+=("--exclude=$(portageq get_repo_path / $i)/*")
+			REPO_PATH=$(portageq get_repo_path / "${i}")
+			EXCLUDES+=("--exclude=${REPO_PATH}/*")
 		done
 		EXCLUDES+=("--exclude=$(portageq distdir)/*")
 	else
