@@ -55,7 +55,7 @@ USAGE="Usage:\n\
 	-C: specify tar compression (default: ${COMPRESS_TYPE}, available: ${!COMPRESS_AVAILABLE[*]}).\n\
 	-s: makes tarball of current system.\n\
 	-t: makes tarball of system located at the <target-mountpoint>.\n\
-	-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
+	-e: an additional excludes directory (one dir one -e, do not use it with *).\n\
 	-i: an additional target to include. This has higher precedence than -e, -t, and -s.\n\
 	-h: displays help message."
 
