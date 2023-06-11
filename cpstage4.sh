@@ -29,7 +29,7 @@ USAGE="Usage:\n\
 		-e: an additional excludes directory (one dir one -e, donot use it with *).\n\
 		-l: excludes lost+found directory.\n\
 		-q: activate quiet mode (no confirmation).\n\
-		-h: display help message."
+		-h: display this help message."
 
 # reads options:
 while getopts ":e:bcelqh" flag

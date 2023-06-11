@@ -57,7 +57,7 @@ USAGE="Usage:\n\
 	-t: makes tarball of system located at the <target-mountpoint>.\n\
 	-e: an additional excludes directory (one dir one -e, do not use it with *).\n\
 	-i: an additional target to include. This has higher precedence than -e, -t, and -s.\n\
-	-h: displays help message."
+	-h: display this help message."
 
 # reads options:
 while getopts ":t:C:e:i:skqcblh" flag
@@ -255,6 +255,7 @@ TAR_OPTIONS=(
 	--ignore-failed-read
 	"--xattrs-include=*.*"
 	--numeric-owner
+	--checkpoint=.500
 	"--use-compress-prog=${COMP_OPTIONS[*]}"
 	)
 
