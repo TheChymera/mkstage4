@@ -255,7 +255,7 @@ TAR_OPTIONS=(
 	--ignore-failed-read
 	"--xattrs-include=*.*"
 	--numeric-owner
-	--checkpoint=.500
+	"--checkpoint=.500"
 	"--use-compress-prog=${COMP_OPTIONS[*]}"
 	)
 
