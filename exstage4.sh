@@ -15,6 +15,8 @@ fi
 
 if [ "$EXT" == "xz" ]; then
 	tar -I 'xz -T0' -xvf "${STAGE_FILE}" --xattrs-include='*.*' --numeric-owner
+elif [ "$EXT" == "zst" ]; then
+        tar -I 'zstd -T0' -xvf "${STAGE_FILE}" --xattrs-include='*.*' --numeric-owner
 elif [ "$EXT" == "bz2" ]; then
 	tar -I pbzip2 -xvf "${STAGE_FILE}" --xattrs-include='*.*' --numeric-owner
 elif [ "$EXT" == "gz" ]; then
