@@ -161,6 +161,6 @@ tar -I unpigz -xvf archive_name.tar.gz --xattrs-include='*.*' --numeric-owner
 * `-C lzo`:
   * **[lzop](https://www.lzop.org/)** - in Portage as **[app-arch/lzop](https://packages.gentoo.org/packages/app-arch/lzop)**, (parallel)
 
-* `-C zstd`:
+* `-C zst`:
   * **[zstd](https://facebook.github.io/zstd/)** - in Portage as **[app-arch/zstd](https://packages.gentoo.org/packages/app-arch/zstd)**, (parallel)
 
